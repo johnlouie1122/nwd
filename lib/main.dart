@@ -11,16 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-
-      routes: {
-        '/adminlogin': (context) => const AdminLogin()
-      },
-
+    return MaterialApp(
+      title: 'NWD Customer Service',
+      routes: {'/adminlogin': (context) => const AdminLogin()},
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily:'nunito', 
-      ),
+      theme: ThemeData(fontFamily: 'nunito'),
       home: const LoginPage(),
     );
   }
@@ -29,8 +24,13 @@ class MyApp extends StatelessWidget {
 // DEBUG
 // kini i run kung mag debug gamit web aron makita ang mga images
 // flutter run -d chrome --web-renderer html
-
+// ==================================================
 // BUILD
 // kini i run basta mag build ka sa web app
 // flutter build web --release
-// paghuman ug build, naa ranas "build/web" nga folder sa project
+
+// paghuman ug build, naa ranas "build/web" nga folder sa project, ideploy dayon sa firebase hosting
+// firebase deploy
+// ==================================================
+// upload sa github
+// 1. git add .
