@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nwd/views/admin/login.dart';
-import 'views/login/login.dart';
+import 'package:nwd/views/admin/admin%20login/login.dart';
+import 'package:nwd/views/test/main_page_test2.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {'/adminlogin': (context) => const AdminLogin()},
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'nunito'),
-      home: const LoginPage(),
+      home:  const Test2(),
     );
   }
 }
@@ -34,3 +34,5 @@ class MyApp extends StatelessWidget {
 // ==================================================
 // upload sa github
 // 1. git add .
+// 2. git commit -m "message"
+// 3. git push -u origin main

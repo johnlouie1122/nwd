@@ -15,13 +15,21 @@ class AboutState extends State<About> {
       appBar: AppBar(
         title: const Text('About Us'),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Contact Details'),
-            Text('contact contact contact'),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Contact Details'),
+              Text('contact contact contact'),
+            ],
+          ),
         ),
       ),
     );
