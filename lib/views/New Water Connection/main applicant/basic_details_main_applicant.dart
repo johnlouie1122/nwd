@@ -169,7 +169,7 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
     http
         .post(
       Uri.parse(
-          'http://localhost/nwd/main-applicant/basic_details_main_applicant.php'),
+          'https://capstone.smccnasipit.edu.ph/ocsms-nwd/main-applicant/basic_details_main_applicant.php'),
       body: requestBody,
     )
         .then((response) {

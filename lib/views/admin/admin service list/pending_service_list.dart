@@ -53,7 +53,7 @@ class _PendingServiceListState extends State<PendingServiceList> {
 
   Future<void> updateStatus(String accountName, String status) async {
     final url =
-        Uri.parse('http://localhost/nwd/admin/update_service_status.php');
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/update_service_status.php');
     final response = await http.post(
       url,
       body: {

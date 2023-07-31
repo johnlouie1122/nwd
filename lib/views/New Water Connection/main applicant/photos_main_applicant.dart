@@ -111,7 +111,7 @@ class _RequirementsMainApplicantState extends State<RequirementsMainApplicant> {
 
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost/nwd/requirements_main_customer.php'),
+      Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/requirements_main_customer.php'),
     );
     request.fields['name'] = widget.userData['name'];
     request.fields['randomNumber'] = randomNumber.toString();

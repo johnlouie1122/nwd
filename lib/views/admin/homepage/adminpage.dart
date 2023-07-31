@@ -446,7 +446,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   itemBuilder: (context, gvIndex) {
                     var imageURL =
-                        'https://capstone.smccnasipit.edu.ph/ocsms-nwd/uploads/${rr(applicant)}/${rr(applicantFiles[gvIndex])}';
+                        'http://localhost/nwd/uploads/${rr(applicant)}/${rr(applicantFiles[gvIndex])}';
                     return InkWell(
                       onTap: () => Navigator.push(
                         context,

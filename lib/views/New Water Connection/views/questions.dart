@@ -211,7 +211,7 @@ class _QuestionsState extends State<Questions> {
     String status = correctCount < 6 ? 'FAILED' : 'PASSED';
 
     var response = await http.post(
-      Uri.parse('http://localhost/nwd/user-services/orientation_status.php'),
+      Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/orientation_status.php'),
       body: {'code': code, 'status': status},
     );
 

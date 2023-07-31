@@ -170,7 +170,7 @@ class _BasicDetailsRepresentativeState
     http
         .post(
       Uri.parse(
-          'http://localhost/nwd/representative/basic_details_representative.php'),
+          'https://capstone.smccnasipit.edu.ph/ocsms-nwd/representative/basic_details_representative.php'),
       body: requestBody,
     )
         .then((response) {

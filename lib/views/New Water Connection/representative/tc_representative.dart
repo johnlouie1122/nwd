@@ -27,13 +27,13 @@ class TermsAndConditionsRepresentativeState
 
   Future<void> verifyCode(String code) async {
     var url = Uri.parse(
-        'http://localhost/nwd/representative/requirements_code_representative.php');
+        'https://capstone.smccnasipit.edu.ph/ocsms-nwd/representative/requirements_code_representative.php');
     var response = await http.post(url, body: {'code': code});
 
     if (response.body == 'success') {
       var userDataResponse = await http.post(
         Uri.parse(
-            'http://localhost/nwd/representative/user_data_representative.php'),
+            'https://capstone.smccnasipit.edu.ph/ocsms-nwd/representative/user_data_representative.php'),
         body: {'code': code},
       );
       var userData = jsonDecode(userDataResponse.body);
@@ -51,7 +51,7 @@ class TermsAndConditionsRepresentativeState
 
   Future<void> verifyOrientation(String code) async {
     var url =
-        Uri.parse('http://localhost/nwd/user-services/orientation_code.php');
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/orientation_code.php');
     var response = await http.post(url, body: {'code': code});
 
     if (response.body == 'success') {
