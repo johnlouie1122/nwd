@@ -26,7 +26,7 @@ class _PendingServiceListState extends State<PendingServiceList> {
 
   Future<void> fetchServiceData() async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/get_service_data.php'));
+        .get(Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/get_service_data.php'));
     if (response.statusCode == 200) {
       setState(() {
         serviceData = json.decode(response.body);

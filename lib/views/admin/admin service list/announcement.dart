@@ -34,7 +34,7 @@ class AddAnnouncementState extends State<AddAnnouncement> {
 
     http
         .post(
-      Uri.parse('http://localhost/nwd/admin/add_announcement.php'),
+      Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/add_announcement.php'),
       body: requestBody,
     )
         .then((response) {

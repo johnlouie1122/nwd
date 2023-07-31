@@ -46,7 +46,7 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
 
     http
         .post(
-      Uri.parse('http://localhost/nwd/user-services/customer_feedback.php'),
+      Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/customer_feedback.php'),
       body: requestBody,
     )
         .then((response) {

@@ -29,7 +29,7 @@ class _PromosState extends State<Promos> {
 
   Future<void> fetchPromos() async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/user-services/fetch_promos.php'));
+        .get(Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/fetch_promos.php'));
     if (response.statusCode == 200) {
       setState(() {
         promos = List<Map<String, dynamic>>.from(json.decode(response.body));

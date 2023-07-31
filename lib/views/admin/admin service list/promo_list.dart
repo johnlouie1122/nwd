@@ -29,7 +29,7 @@ class _PromoListState extends State<PromoList> {
 
   Future<void> fetchPromos() async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/fetch_promos.php'));
+        .get(Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/fetch_promos.php'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
@@ -41,7 +41,7 @@ class _PromoListState extends State<PromoList> {
   Future<void> deletePromo(String? title) async {
     if (title != null) {
       final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/delete_promo.php'),
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/delete_promo.php'),
         body: {'title': title},
       );
       if (response.statusCode == 200) {
@@ -55,7 +55,7 @@ class _PromoListState extends State<PromoList> {
   Future<void> editAnnouncement(String title, String content) async {
     if (currentTitle != null && currentContent != null) {
       final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/edit_promo.php'),
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/edit_promo.php'),
         body: {
           'currentTitle': currentTitle!,
           'currentContent': currentContent!,

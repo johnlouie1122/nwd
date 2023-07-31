@@ -45,7 +45,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Future<void> fetchApplicants() async {
-    Uri url = Uri.parse('http://localhost/nwd/admin/applicants.php');
+    Uri url = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/applicants.php');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -63,7 +63,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Future<void> fetchDetails() async {
-    Uri url = Uri.parse('http://localhost/nwd/admin/status.php');
+    Uri url = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/status.php');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -109,7 +109,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     Random random = Random();
     int randomNumber = random.nextInt(900000) + 100000;
     Uri url =
-        Uri.parse('http://localhost/nwd/admin/update_applicant_status.php');
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/update_applicant_status.php');
     final response = await http.post(url, body: {
       'applicantName': applicantName,
       'status': status,
@@ -151,7 +151,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Future<void> fetchApplicantFiles(String applicant) async {
-    Uri filesUrl = Uri.parse('http://localhost/nwd/files.php?name=$applicant');
+    Uri filesUrl = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/files.php?name=$applicant');
     final filesResponse = await http.get(filesUrl);
     if (filesResponse.statusCode == 200) {
       final filesData = jsonDecode(filesResponse.body) as List<dynamic>;
@@ -163,7 +163,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   Future<void> deleteApplicant(String applicantName) async {
     Uri deleteUrl =
-        Uri.parse('http://localhost/nwd/admin/delete_applicant.php');
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/delete_applicant.php');
     final response =
         await http.post(deleteUrl, body: {'applicantName': applicantName});
 
@@ -446,7 +446,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   itemBuilder: (context, gvIndex) {
                     var imageURL =
-                        'http://localhost/nwd/uploads/${rr(applicant)}/${rr(applicantFiles[gvIndex])}';
+                        'https://capstone.smccnasipit.edu.ph/ocsms-nwd/uploads/${rr(applicant)}/${rr(applicantFiles[gvIndex])}';
                     return InkWell(
                       onTap: () => Navigator.push(
                         context,

@@ -24,7 +24,7 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
 
   Future<void> fetchFeedbackList() async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/feedback_list.php'));
+        .get(Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/feedback_list.php'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -36,7 +36,7 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
   Future<void> deleteFeedback(String? name) async {
     if (name != null) {
       final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/delete_customer_feedback.php'),
+        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/delete_customer_feedback.php'),
         body: {'name': name},
       );
       if (response.statusCode == 200) {

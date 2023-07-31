@@ -24,7 +24,7 @@ class _DisconnectionState extends State<Disconnection> {
   final consumptionController = TextEditingController();
 
   void submitForm() async {
-    var url = Uri.parse('http://localhost/nwd/user-services/disconnection.php');
+    var url = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/disconnection.php');
 
     var response = await http.post(url, body: {
       'account_name': accountNameController.text,

@@ -24,7 +24,7 @@ class ReconnectionFormState extends State<ReconnectionForm> {
   final TextEditingController contactController = TextEditingController();
 
   void submitForm() async {
-    var url = Uri.parse('http://localhost/nwd/user-services/reconnection.php');
+    var url = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/reconnection.php');
 
     var response = await http.post(url, body: {
       'accountName': accountNameController.text,

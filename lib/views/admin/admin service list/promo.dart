@@ -34,7 +34,7 @@ class AddAPromoState extends State<AddAPromo> {
 
     http
         .post(
-      Uri.parse('http://localhost/nwd/admin/add_promo.php'),
+      Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/add_promo.php'),
       body: requestBody,
     )
         .then((response) {
