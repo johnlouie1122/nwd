@@ -2,9 +2,9 @@
 header('Access-Control-Allow-Origin: *');
 
 $servername = "localhost";
-$username = "root";
-$password = "";
-$database = "nwd";
+$username = "smcc";
+$password = "smcc@2020";
+$database = "ocsms-nwd";
 
 $conn = new mysqli($servername, $username, $password, $database);
 

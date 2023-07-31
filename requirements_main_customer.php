@@ -11,9 +11,9 @@ if (
     isset($_POST['name'])
 ) {
     $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "nwd";
+    $username = "smcc";
+    $password = "smcc@202";
+    $dbname = "ocsms-nwd";
 
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

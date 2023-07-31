@@ -1,7 +1,7 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$connection = mysqli_connect("localhost", "root", "", "nwd");
+$connection = mysqli_connect("localhost", "smcc", "smcc@2020", "ocsms-nwd");
 
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());

@@ -2,9 +2,9 @@
 header('Access-Control-Allow-Origin: *');
 
 $host = 'localhost';
-$dbName = 'nwd';
-$username = 'root';
-$password = '';
+$dbName = 'ocsms-nwd';
+$username = 'smcc';
+$password = 'smcc@2020';
 
 try {
 

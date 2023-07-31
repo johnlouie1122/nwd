@@ -5,9 +5,9 @@ $feedback = $_POST['feedback'];
 $name = $_POST['name'];
 
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "nwd";
+$username = "smcc";
+$password = "smcc@2020";
+$dbname = "ocsms-nwd";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
