@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nwd/views/admin/admin%20login/login.dart';
-import 'package:nwd/views/test/main_page_test2.dart';
+import 'package:nwd/views/services%20forms/main.view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,10 +13,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NWD Customer Service',
-      routes: {'/adminlogin': (context) => const AdminLogin()},
+      routes: {
+        '/adminlogin': (context) => const AdminLogin(),
+      },
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'nunito'),
-      home:  const Test2(),
+       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const MainView(),
     );
   }
 }
@@ -36,3 +41,5 @@ class MyApp extends StatelessWidget {
 // 1. git add .
 // 2. git commit -m "message"
 // 3. git push -u origin main
+// flutter build web --web-renderer html
+

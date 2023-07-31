@@ -26,7 +26,7 @@ class _AdminLoginState extends State<AdminLogin> {
   }
 
   void login() async {
-    var url = Uri.parse('http://localhost/nwd/adminlogin.php');
+    var url = Uri.parse('http://localhost/nwd/admin/adminlogin.php');
     var body = {
       'username': _usernameController.text,
       'password': _passwordController.text,
@@ -38,18 +38,18 @@ class _AdminLoginState extends State<AdminLogin> {
       var responseData = json.decode(response.body);
 
       if (responseData['status'] == 'success') {
-        // Login successful
-        Navigator.of(context).push(
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (BuildContext context) {
               return const AdminHomePage();
             },
           ),
+          (Route<dynamic> route) => false,
         );
       } else {
-        // Login failed
         QuickAlert.show(
-          context: context, onConfirmBtnTap: () {
+          context: context,
+          onConfirmBtnTap: () {
             Navigator.pop(context);
           },
           type: QuickAlertType.error,
@@ -58,8 +58,6 @@ class _AdminLoginState extends State<AdminLogin> {
         );
       }
     } else {
-      // Handle other response status codes if needed
-      // For example, show an error dialog for non-200 status codes
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -68,6 +66,7 @@ class _AdminLoginState extends State<AdminLogin> {
             content: const Text('An error occurred during login'),
             actions: [
               TextButton(
+                autofocus: true,
                 onPressed: () => Navigator.pop(context),
                 child: const Text('OK'),
               ),
@@ -109,6 +108,10 @@ class _AdminLoginState extends State<AdminLogin> {
               SizedBox(
                 width: 300,
                 child: TextField(
+                  autofocus: true,
+                  onSubmitted: (value) {
+                    login();
+                  },
                   controller: _usernameController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -122,6 +125,9 @@ class _AdminLoginState extends State<AdminLogin> {
               SizedBox(
                 width: 300,
                 child: TextField(
+                  onSubmitted: (value) {
+                    login();
+                  },
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -138,6 +144,8 @@ class _AdminLoginState extends State<AdminLogin> {
                 height: 40,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -145,6 +153,7 @@ class _AdminLoginState extends State<AdminLogin> {
                   onPressed: login,
                   child: const Text(
                     'LOGIN',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
