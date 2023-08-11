@@ -60,7 +60,6 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
                 textField(
                   const Icon(Icons.person_rounded),
                   'FULL NAME',
-                  MediaQuery.of(context).size.width / 2,
                   _fullNameController,
                 ),
                 const SizedBox(
@@ -69,28 +68,24 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
                 textField(
                   const Icon(Icons.location_on_rounded),
                   'ADDRESS',
-                  MediaQuery.of(context).size.width / 2,
                   _addressController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.numbers_rounded),
                   'CONTACT NUMBER',
-                  MediaQuery.of(context).size.width / 2,
                   _contactNumberController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.pin_drop),
                   'Landmark',
-                  MediaQuery.of(context).size.width / 2,
                   _landmarkController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.near_me),
                   'Nearest Existing NWD customer (Neighbor/s Name)',
-                  MediaQuery.of(context).size.width / 2,
                   _nearestCustomerController,
                 ),
                 const SizedBox(
@@ -131,7 +126,8 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
                     },
                     child: const Text(
                       'Submit',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 )
@@ -169,7 +165,7 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
     http
         .post(
       Uri.parse(
-          'https://capstone.smccnasipit.edu.ph/ocsms-nwd/main-applicant/basic_details_main_applicant.php'),
+          'http://localhost/nwd/main-applicant/basic_details_main_applicant.php'),
       body: requestBody,
     )
         .then((response) {
@@ -183,14 +179,14 @@ class BasicDetailsMainApplicantState extends State<BasicDetailsMainApplicant> {
     });
   }
 
-  Widget textField(
-      Icon icon, String label, double width, TextEditingController controller) {
+  Widget textField(Icon icon, String label, TextEditingController controller) {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            width: width,
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: TextField(
+              maxLines: null,
               controller: controller,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),

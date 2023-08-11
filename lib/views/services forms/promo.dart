@@ -29,7 +29,7 @@ class _PromosState extends State<Promos> {
 
   Future<void> fetchPromos() async {
     final response = await http
-        .get(Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/fetch_promos.php'));
+        .get(Uri.parse('http://localhost/nwd/user-services/fetch_promos.php'));
     if (response.statusCode == 200) {
       setState(() {
         promos = List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -92,7 +92,7 @@ class _PromosState extends State<Promos> {
                   return Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Card(
-                      color: Colors.blue,
+                      // color: Colors.blue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -106,7 +106,7 @@ class _PromosState extends State<Promos> {
                               promos[index]['title'],
                               style: const TextStyle(
                                   fontSize: 25,
-                                  color: Colors.white,
+                                  color: Colors.blue,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -124,9 +124,9 @@ class _PromosState extends State<Promos> {
                             Text(
                               promos[index]['content'],
                               style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),

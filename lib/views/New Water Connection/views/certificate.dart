@@ -29,7 +29,7 @@ class _CertificateState extends State<Certificate> {
 
   Future<void> sendCertificateCode() async {
     var url = Uri.parse(
-        'https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/generate_certificate.php');
+        'http://localhost/nwd/user-services/generate_certificate.php');
     var response = await http.post(url,
         body: {'certificate_code': generatedCode, 'code': widget.code});
 

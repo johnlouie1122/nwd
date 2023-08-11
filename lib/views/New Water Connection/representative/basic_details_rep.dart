@@ -61,7 +61,6 @@ class _BasicDetailsRepresentativeState
                 textField(
                   const Icon(Icons.person_rounded),
                   'FULL NAME',
-                  MediaQuery.of(context).size.width / 2,
                   _fullNameController,
                 ),
                 const SizedBox(
@@ -70,28 +69,24 @@ class _BasicDetailsRepresentativeState
                 textField(
                   const Icon(Icons.location_on_rounded),
                   'ADDRESS',
-                  MediaQuery.of(context).size.width / 2,
                   _addressController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.numbers_rounded),
                   'CONTACT NUMBER',
-                  MediaQuery.of(context).size.width / 2,
                   _contactNumberController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.pin_drop),
                   'Landmark',
-                  MediaQuery.of(context).size.width / 2,
                   _landmarkController,
                 ),
                 const SizedBox(height: 10),
                 textField(
                   const Icon(Icons.near_me),
                   'Nearest Existing NWD customer (Neighbor/s Name)',
-                  MediaQuery.of(context).size.width / 2,
                   _nearestCustomerController,
                 ),
                 const SizedBox(
@@ -132,7 +127,7 @@ class _BasicDetailsRepresentativeState
                     },
                     child: const Text(
                       'Submit',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 )
@@ -170,7 +165,7 @@ class _BasicDetailsRepresentativeState
     http
         .post(
       Uri.parse(
-          'https://capstone.smccnasipit.edu.ph/ocsms-nwd/representative/basic_details_representative.php'),
+          'http://localhost/nwd/representative/basic_details_representative.php'),
       body: requestBody,
     )
         .then((response) {
@@ -184,13 +179,12 @@ class _BasicDetailsRepresentativeState
     });
   }
 
-  Widget textField(
-      Icon icon, String label, double width, TextEditingController controller) {
+  Widget textField(Icon icon, String label, TextEditingController controller) {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            width: width,
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: TextField(
               controller: controller,
               decoration: InputDecoration(

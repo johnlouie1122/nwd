@@ -26,7 +26,7 @@ class _AdminLoginState extends State<AdminLogin> {
   }
 
   void login() async {
-    var url = Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/admin/adminlogin.php');
+    var url = Uri.parse('http://localhost/nwd/admin/adminlogin.php');
     var body = {
       'username': _usernameController.text,
       'password': _passwordController.text,

@@ -28,7 +28,7 @@ class _AnnouncementsState extends State<Announcements> {
 
   Future<void> fetchAnnouncements() async {
     final response = await http.get(
-        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/fetch_announcement.php'));
+        Uri.parse('http://localhost/nwd/user-services/fetch_announcement.php'));
     if (response.statusCode == 200) {
       setState(() {
         announcements =

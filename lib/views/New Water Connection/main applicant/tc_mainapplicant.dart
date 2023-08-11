@@ -27,13 +27,13 @@ class _TermsAndConditionsMainApplicantState
 
   Future<void> verifyCode(String code) async {
     var url = Uri.parse(
-        'https://capstone.smccnasipit.edu.ph/ocsms-nwd/main-applicant/requirements_code_main_applicant.php');
+        'http://localhost/nwd/main-applicant/requirements_code_main_applicant.php');
     var response = await http.post(url, body: {'code': code});
 
     if (response.body == 'success') {
       var userDataResponse = await http.post(
         Uri.parse(
-            'https://capstone.smccnasipit.edu.ph/ocsms-nwd/main-applicant/user_data_main_applicant.php'),
+            'http://localhost/nwd/main-applicant/user_data_main_applicant.php'),
         body: {'code': code},
       );
       var userData = jsonDecode(userDataResponse.body);
@@ -51,7 +51,7 @@ class _TermsAndConditionsMainApplicantState
 
   Future<void> verifyOrientation(String code) async {
     var url =
-        Uri.parse('https://capstone.smccnasipit.edu.ph/ocsms-nwd/user-services/orientation_code.php');
+        Uri.parse('http://localhost/nwd/user-services/orientation_code.php');
     var response = await http.post(url, body: {'code': code});
 
     if (response.body == 'success') {
