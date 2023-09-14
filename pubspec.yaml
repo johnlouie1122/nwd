@@ -51,6 +51,9 @@ dependencies:
   twilio: ^0.0.2
   twilio_flutter: ^0.0.9
   intl: ^0.17.0
+  provider: ^6.0.5
+  foundation: ^0.0.5
+ 
   
 
 dev_dependencies:
@@ -89,6 +92,14 @@ flutter:
     - assets/images/representative.png
     - assets/images/services.png
     - assets/images/us.png
+    - assets/images/noprofile.png
+    - assets/images/evaluation.png
+    - assets/images/requirements.png
+    - assets/images/orientation.png
+    - assets/images/payment.png
+    - assets/images/agreement.png
+    - assets/images/house.png
+    - assets/images/tombstone.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

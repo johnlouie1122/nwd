@@ -1,20 +1,21 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: unused_local_variable
+
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:nwd/views/admin/widgets/admindrawer.dart';
-import 'dart:convert';
-import 'package:quickalert/quickalert.dart';
 import 'package:intl/intl.dart';
+import 'package:nwd/views/admin/widgets/admindrawer.dart';
+import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 
-class PendingServiceList extends StatefulWidget {
-  const PendingServiceList({Key? key}) : super(key: key);
+class CalibrationList extends StatefulWidget {
+  const CalibrationList({super.key});
 
   @override
-  State<PendingServiceList> createState() => _PendingServiceListState();
+  State<CalibrationList> createState() => _CalibrationListState();
 }
 
-class _PendingServiceListState extends State<PendingServiceList> {
+class _CalibrationListState extends State<CalibrationList> {
   List<dynamic> serviceData = [];
   TextEditingController searchController = TextEditingController();
   List<dynamic> filteredServiceData = [];
@@ -26,8 +27,8 @@ class _PendingServiceListState extends State<PendingServiceList> {
   }
 
   Future<void> fetchServiceData() async {
-    final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/get_service_data.php'));
+    final response = await http.get(Uri.parse(
+        'http://localhost/nwd/admin/get_servicelist.php?table=meter_calibration'));
     if (response.statusCode == 200) {
       setState(() {
         serviceData = json.decode(response.body);
@@ -52,14 +53,14 @@ class _PendingServiceListState extends State<PendingServiceList> {
     }
   }
 
-  Future<void> updateStatus(String accountName, String status) async {
-    final url =
-        Uri.parse('http://localhost/nwd/admin/update_service_status.php');
+  Future<void> updateStatus(String id, String status, String table) async {
+    final url = Uri.parse('http://localhost/nwd/admin/update_status.php');
     final response = await http.post(
       url,
       body: {
-        'accountName': accountName,
+        'id': id,
         'status': status,
+        'table': table,
       },
     );
 
@@ -87,7 +88,7 @@ class _PendingServiceListState extends State<PendingServiceList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Pending Service Requests',
+          'Water Meter Calibration',
           style: TextStyle(color: Colors.blue, fontSize: 25),
         ),
       ),
@@ -136,16 +137,13 @@ class _PendingServiceListState extends State<PendingServiceList> {
                   var tileColor =
                       index % 2 == 0 ? Colors.white : Colors.grey.shade100;
                   final service = filteredServiceData[index];
+                  final id = service['id'];
                   final accountName = service['account_name'];
-                  final type = service['type'];
                   final date = service['date'];
                   final accountNumber = service['account_number'];
                   final address = service['address'];
-                  final contactNumber = service['contact_number'];
+                  final contactNumber = service['contact'];
                   final landmark = service['landmark'];
-                  final previousReading = service['previous_reading'];
-                  final currentReading = service['current_reading'];
-                  final consumption = service['consumption'];
                   final status = service['status'];
 
                   return ListTile(
@@ -170,10 +168,6 @@ class _PendingServiceListState extends State<PendingServiceList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          type,
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        Text(
                           status,
                           style: TextStyle(
                               fontSize: 15, color: _getStatusColor(status)),
@@ -193,17 +187,102 @@ class _PendingServiceListState extends State<PendingServiceList> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('DATE: $date'),
-                                  Text('TYPE: $type'),
-                                  Text('ACCOUNT NAME: $accountName'),
-                                  Text('ACCOUNT NUMBER: $accountNumber'),
-                                  Text('ADDRESS: $address'),
-                                  Text('CONTACT NUMBER: $contactNumber'),
-                                  Text('LANDMARK: $landmark'),
-                                  Text('PREVIOUS READING: $previousReading'),
-                                  Text('CURRENT READING: $currentReading'),
-                                  Text('CONSUMPTION: $consumption'),
-                                  Text('STATUS: $status'),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.5,
+                                  ),
+                                  Table(
+                                    defaultVerticalAlignment:
+                                        TableCellVerticalAlignment.middle,
+                                    border: TableBorder.all(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    children: [
+                                      const TableRow(
+                                        decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10))),
+                                        children: [
+                                          TableCell(
+                                            child: Text(
+                                              'DATE',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'ACCOUNT NAME',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'ACCOUNT NUMBER',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'ADDRESS',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'LANDMARK',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'CONTACT NUMBER',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Text(
+                                              'STATUS',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      TableRow(children: [
+                                        Text('$date',
+                                            textAlign: TextAlign.center),
+                                        Text('$accountName',
+                                            textAlign: TextAlign.center),
+                                        Text('$accountNumber',
+                                            textAlign: TextAlign.center),
+                                        Text('$address',
+                                            textAlign: TextAlign.center),
+                                        Text(
+                                          '$landmark',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text('$contactNumber',
+                                            textAlign: TextAlign.center),
+                                        Text('$status',
+                                            textAlign: TextAlign.center),
+                                      ])
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
@@ -224,14 +303,11 @@ class _PendingServiceListState extends State<PendingServiceList> {
                                     title: 'Confirmation. . .',
                                     text: 'Are you sure you want to Decline?',
                                     onConfirmBtnTap: () {
-                                      updateStatus(accountName, 'DECLINED');
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const PendingServiceList();
-                                          },
-                                        ),
-                                      );
+                                      updateStatus(
+                                          id, 'DECLINED', 'meter_calibration');
+                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
+                                        return const CalibrationList();
+                                      }), (route) => false);
                                     },
                                   );
                                 },
@@ -262,14 +338,11 @@ class _PendingServiceListState extends State<PendingServiceList> {
                                         type: QuickAlertType.success,
                                         text: 'Service Successfully Approved',
                                         onConfirmBtnTap: () {
-                                          updateStatus(accountName, 'APPROVED');
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return const PendingServiceList();
-                                              },
-                                            ),
-                                          );
+                                          updateStatus(id, 'APPROVED',
+                                              'meter_calibration');
+                                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
+                                          return const CalibrationList();
+                                         }), (route) => false);
                                         },
                                       );
                                     },

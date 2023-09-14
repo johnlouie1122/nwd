@@ -5,23 +5,25 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:nwd/views/admin/widgets/admindrawer.dart';
 import 'package:quickalert/quickalert.dart';
-// import 'package:twilio_flutter/twilio_flutter.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 
 class AdminHomePage extends StatefulWidget {
-  const AdminHomePage({Key? key}) : super(key: key);
+  const AdminHomePage({super.key});
 
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  TextEditingController declineReasonController = TextEditingController();
+
   TextEditingController searchController = TextEditingController();
 
-  // final twilioFlutter = TwilioFlutter(
-  //   accountSid: 'ACf035cce009fdf751b635d1209041903b',
-  //   authToken: 'b0125e1c1076facd9e9c4c603adf50bc',
-  //   twilioNumber: '+13252465490',
-  // );
+  final twilioFlutter = TwilioFlutter(
+    accountSid: 'AC99e89e20dfaa62ca55f82d16ec644a81',
+    authToken: '36e8bd7cfde18101d667db6e69b25212',
+    twilioNumber: '+13083368459',
+  );
 
   List<String> originalApplicants = [];
   List<String> applicants = [];
@@ -104,8 +106,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
     }
   }
 
-  Future<void> updateApplicantStatus(
-      String applicantName, String status, int index, String type) async {
+  Future<void> updateApplicantStatus(String applicantName, String status,
+      int index, String type, String declineReason) async {
     Random random = Random();
     int randomNumber = random.nextInt(900000) + 100000;
     Uri url =
@@ -119,23 +121,29 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
     if (response.statusCode == 200) {
       if (status == 'FOR EVALUATION') {
-        //   await twilioFlutter.sendSMS(
-        //     messageBody:
-        //         'Nasipit Water District: Your online new water connection is now set for Evaluation. Here is your step 2 code: $randomNumber. Use this code if you already have all the requirements for step 2',
-        //     toNumber: contactNumber[index],
-        //   );
-        // } else if (status == 'DECLINED') {
-        //   await twilioFlutter.sendSMS(
-        //     messageBody:
-        //         'Nasipit Water District: We regret to inform you that your request for a new water connection has been declined. Please contact us for further information.',
-        //     toNumber: contactNumber[index],
-        //   );
-        // } else if (status == 'APPROVED') {
-        //   await twilioFlutter.sendSMS(
-        //     messageBody:
-        //         'Nasipit Water District: Congratulations! Your request for a new water connection has been approved. Please submit a copy of your submitted details and pay the new water connection fees at the Nasipit Water District office. Thank you!',
-        //     toNumber: contactNumber[index],
-        //   );
+        await twilioFlutter.sendSMS(
+          messageBody:
+              'Nasipit Water District: Your online new water connection is now set for Evaluation. Here is your step 2 code: $randomNumber. Use this code if you already have all the requirements for step 2',
+          toNumber: contactNumber[index],
+        );
+      } else if (status == 'DECLINED') {
+        await twilioFlutter.sendSMS(
+          messageBody:
+              'Nasipit Water District: We regret to inform you that your request for a new water connection has been declined. Reason: $declineReason',
+          toNumber: contactNumber[index],
+        );
+      } else if (status == 'APPROVED') {
+        await twilioFlutter.sendSMS(
+          messageBody:
+              'Nasipit Water District: Congratulations! Your request for a new water connection has been approved. Please submit a copy of your submitted details and pay the new water connection fees at the Nasipit Water District office. Thank you!',
+          toNumber: contactNumber[index],
+        );  
+         } else if (status == 'ORIENTATION') {
+        await twilioFlutter.sendSMS(
+          messageBody:
+              'Nasipit Water District: Your Online new water connection is now set for Orientation, here is your orientation code: $randomNumber',
+          toNumber: contactNumber[index],
+        );
       }
 
       Navigator.of(context).pushReplacement(
@@ -194,7 +202,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Water Service Applicant List'),
+        title: const Text(
+          'New Water Service Applicant List',
+          style: TextStyle(color: Colors.blue, fontSize: 25),
+        ),
+        actions: [
+          Image.asset('assets/images/logo.png'),
+        ],
       ),
       drawer: const DrawerWidget(),
       body: SingleChildScrollView(
@@ -236,6 +250,22 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                 ),
               ),
+              const Padding(
+                padding: EdgeInsets.only(left: 50.0, right: 50.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'APPLICANT NAME',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'STATUS',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.width,
@@ -250,20 +280,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       tileColor: tileColor,
                       title: Text(
                         applicants[index],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15
-                        ),
+                        style: const TextStyle(fontSize: 15),
                       ),
                       trailing: status.length > index
                           ? Text(
-                            status[index],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: _getStatusColor(status[index]),
-                            ),
-                          )
+                              status[index],
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: _getStatusColor(status[index]),
+                              ),
+                            )
                           : null,
                       onTap: () async => await fetchApplicantFiles(
                         rr(applicants[index]),
@@ -294,118 +320,104 @@ class _AdminHomePageState extends State<AdminHomePage> {
             child: Text(
               'APPLICANT DETAILS',
               style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic),
+                fontSize: 25,
+              ),
             ),
           ),
           content: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    border: TableBorder.all(
+                        borderRadius: BorderRadius.circular(10)),
                     children: [
-                      Text(
-                        'NAME: ${name[index]}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      const TableRow(
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10))),
+                        children: [
+                          TableCell(
+                            child: Text(
+                              'NAME',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'ADDRESS',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'CONTACT NUMBER',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'LANDMARK',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'NEAREST EXISTING CUSTOMER',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'TYPE',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'ORIENTATION STATUS',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'CERTIFICATE CODE',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                      TableRow(children: [
+                        Text(name[index], textAlign: TextAlign.center),
+                        Text(address[index], textAlign: TextAlign.center),
+                        Text(contactNumber[index], textAlign: TextAlign.center),
+                        Text(landmark[index], textAlign: TextAlign.center),
+                        Text(
+                          nearestExistingCustomer[index],
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'ADDRESS: ${address[index]}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'CONTACT NUMBER: ${contactNumber[index]}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'LANDMARK: ${landmark[index]}',
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'NEAREST EXISTING CUSTOMER: ${nearestExistingCustomer[index]}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'TYPE: ${type[index]}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'ORIENTATION STATUS: ${orientationStatus[index]}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'CERTIFICATE CODE: ${certificateCode[index]}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                        Text(type[index], textAlign: TextAlign.center),
+                        Text(orientationStatus[index],
+                            textAlign: TextAlign.center),
+                        Text(certificateCode[index],
+                            textAlign: TextAlign.center),
+                      ])
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -457,205 +469,238 @@ class _AdminHomePageState extends State<AdminHomePage> {
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+              padding: const EdgeInsets.only(top: 15.0),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const AdminHomePage();
-                        },
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return const AdminHomePage();
+                      },
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Text(
+                  'Close',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                onPressed: () {
+                  QuickAlert.show(
+                    context: context,
+                    showCancelBtn: true,
+                    type: QuickAlertType.error,
+                    title: 'Warning . . .',
+                    text: 'Are you sure you want to Delete?',
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmBtnTap: () async {
+                      await deleteApplicant(applicant);
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AdminHomePage();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Delete',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                onPressed: () {
+                  QuickAlert.show(
+                    context: context,
+                    showCancelBtn: true,
+                    confirmBtnText: 'Yes',
+                    type: QuickAlertType.error,
+                    title: 'Warning . . . ',
+                    text: 'Are you sure you want to Decline?',
+                  widget:  TextField(
+                      controller: declineReasonController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                     
+                        labelText: 'Reason for declining',
                       ),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                  child: const Text(
-                    'Close',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black),
-                  ),
+                    ),
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmBtnTap: () async {
+                      String declineReason = declineReasonController.text; 
+                      await updateApplicantStatus(
+                        applicant,
+                        'DECLINED',
+                        index,
+                        type[index],
+                        declineReason
+                      );
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AdminHomePage();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Decline',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      showCancelBtn: true,
-                      type: QuickAlertType.error,
-                      title: 'Warning . . .',
-                      text: 'Are you sure you want to Delete?',
-                      onCancelBtnTap: () {
-                        Navigator.pop(context);
-                      },
-                      onConfirmBtnTap: () async {
-                        await deleteApplicant(applicant);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return const AdminHomePage();
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text(
-                    'Delete',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                ),
+                onPressed: () {
+                  QuickAlert.show(
+                    context: context,
+                    showCancelBtn: true,
+                    type: QuickAlertType.success,
+                    title: 'Confirmation',
+                    text: 'Are you sure?',
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmBtnTap: () async {
+                      await updateApplicantStatus(
+                          applicant, 'FOR EVALUATION', index, type[index], '');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AdminHomePage();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Evaluation',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      showCancelBtn: true,
-                      confirmBtnText: 'Yes',
-                      type: QuickAlertType.error,
-                      title: 'Warning . . . ',
-                      text: 'Are you sure you want to Decline?',
-                      onCancelBtnTap: () {
-                        Navigator.pop(context);
-                      },
-                      onConfirmBtnTap: () async {
-                        await updateApplicantStatus(
-                            applicant, 'DECLINED', index, type[index]);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return const AdminHomePage();
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text(
-                    'Decline',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                ),
+                onPressed: () {
+                   QuickAlert.show(
+                    context: context,
+                    showCancelBtn: true,
+                    type: QuickAlertType.success,
+                    title: 'Confirmation',
+                    text: 'Are you sure?',
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmBtnTap: () async {
+                      await updateApplicantStatus(
+                          applicant, 'ORIENTATION', index, type[index], '');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const AdminHomePage();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Orientation',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      showCancelBtn: true,
-                      type: QuickAlertType.success,
-                      title: 'Confirmation',
-                      text: 'Are you sure?',
-                      onCancelBtnTap: () {
-                        Navigator.pop(context);
-                      },
-                      onConfirmBtnTap: () async {
-                        await updateApplicantStatus(
-                            applicant, 'FOR EVALUATION', index, type[index]);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return const AdminHomePage();
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text(
-                    'Evaluation',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 40,
-                width: 120,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      confirmBtnText: 'Yes',
-                      cancelBtnText: 'Cancel',
-                      showCancelBtn: true,
-                      type: QuickAlertType.success,
-                      title: 'Confirmation . . .',
-                      text: 'Are you sure you want to Approve?',
-                      onCancelBtnTap: () {
-                        Navigator.pop(context);
-                      },
-                      onConfirmBtnTap: () async {
-                        await updateApplicantStatus(
-                            applicant, 'APPROVED', index, type[index]);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return const AdminHomePage();
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text(
-                    'Approve',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                onPressed: () {
+                  QuickAlert.show(
+                    context: context,
+                    confirmBtnText: 'Yes',
+                    cancelBtnText: 'Cancel',
+                    showCancelBtn: true,
+                    type: QuickAlertType.success,
+                    title: 'Confirmation . . .',
+                    text: 'Are you sure you want to Approve?',
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmBtnTap: () async {
+                      await updateApplicantStatus(
+                          applicant, 'APPROVED', index, type[index], '');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return AdminHomePage();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Approve',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

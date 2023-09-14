@@ -1,18 +1,18 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:nwd/views/admin/admin%20service%20list/promo_list.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;
+import 'package:nwd/views/admin/admin%20service%20list/announcement_list.dart';
+import 'package:quickalert/quickalert.dart';
 
-class AddAPromo extends StatefulWidget {
-  const AddAPromo({super.key});
+class AddAnnouncement extends StatefulWidget {
+  const AddAnnouncement({super.key});
 
   @override
-  State<AddAPromo> createState() => AddAPromoState();
+  State<AddAnnouncement> createState() => AddAnnouncementState();
 }
 
-class AddAPromoState extends State<AddAPromo> {
+class AddAnnouncementState extends State<AddAnnouncement> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
@@ -23,18 +23,19 @@ class AddAPromoState extends State<AddAPromo> {
     super.dispose();
   }
 
-  void submitDetails() {
+  void submitDetails(String db) {
     String title = _titleController.text;
     String content = _contentController.text;
 
     Map<String, String> requestBody = {
+      'db': db,
       'title': title,
       'content': content,
     };
 
     http
         .post(
-      Uri.parse('http://localhost/nwd/admin/add_promo.php'),
+      Uri.parse('http://localhost/nwd/admin/add.php'),
       body: requestBody,
     )
         .then((response) {
@@ -56,7 +57,6 @@ class AddAPromoState extends State<AddAPromo> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      scrollable: true,
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 1.5,
         height: 500,
@@ -65,8 +65,9 @@ class AddAPromoState extends State<AddAPromo> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'ADD PROMO',
+              'ADD ANNOUNCEMENT',
               style: TextStyle(
+                color: Colors.blue,
                 fontSize: 25,
                 fontWeight: FontWeight.w900,
                 fontStyle: FontStyle.italic,
@@ -113,7 +114,6 @@ class AddAPromoState extends State<AddAPromo> {
               width: MediaQuery.of(context).size.width / 3,
               height: 40,
               child: ElevatedButton(
-                
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
@@ -122,31 +122,31 @@ class AddAPromoState extends State<AddAPromo> {
                 ),
                 onPressed: () {
                   if (_validateFields()) {
-                    submitDetails();
+                    submitDetails('announcements');
                     QuickAlert.show(
                       context: context,
                       onConfirmBtnTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return const PromoList();
+                            return const AnnouncementList();
                           },
                         ));
                       },
                       type: QuickAlertType.success,
-                      text: 'Basic Details submitted!',
+                      text: 'Announcement Successfully Posted',
                     );
                   } else {
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.error,
-                      text: 'Please enter all required details!',
+                      text: 'Please enter all required fields!',
                     );
                   }
                 },
                 child: const Text(
                   'POST',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

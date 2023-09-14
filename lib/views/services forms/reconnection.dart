@@ -10,6 +10,8 @@ import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
 import 'dart:html' as html;
 
+import 'transfer/transfer_ownership.dart';
+
 class ReconnectionForm extends StatefulWidget {
   const ReconnectionForm({super.key});
 
@@ -22,15 +24,18 @@ class ReconnectionFormState extends State<ReconnectionForm> {
   final TextEditingController accountNameController = TextEditingController();
   final TextEditingController landmarkController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
-  void submitForm() async {
-    var url = Uri.parse('http://localhost/nwd/user-services/reconnection.php');
+  void submitForm(String table) async {
+    var url = Uri.parse('http://localhost/nwd/user-services/add.php');
 
     var response = await http.post(url, body: {
       'accountName': accountNameController.text,
       'accountNumber': accountNumberController.text,
+      'address': addressController.text,
       'landmark': landmarkController.text,
       'contact': contactController.text,
+      'table': table,
     });
 
     if (response.statusCode == 200) {
@@ -38,13 +43,10 @@ class ReconnectionFormState extends State<ReconnectionForm> {
         QuickAlert.show(
           context: context,
           onConfirmBtnTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return const MainView();
-                },
-              ),
-            );
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return const MainView();
+            }), (route) => false);
           },
           type: QuickAlertType.success,
           text: 'Request Submitted Successfully',
@@ -108,6 +110,10 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                     builder: (BuildContext context) {
                       return const ConnectionDialog();
                     });
+              } else if (value.route == '/transfer-ownership') {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return const TransferDialog();
+                });
               }
             })
           : null,
@@ -129,7 +135,7 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                 children: [
                   const Flexible(
                     child: Text(
-                      'Water Reconnection Form',
+                      'Reconnection Form',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 30,
@@ -147,7 +153,7 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.account_circle_outlined),
+                        suffixIcon: Icon(Icons.person),
                         labelText: 'Account Name',
                       ),
                     ),
@@ -158,7 +164,7 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                     child: TextField(
                       controller: accountNumberController,
                       decoration: const InputDecoration(
-                         filled: true,
+                        filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(),
                         suffixIcon: Icon(Icons.numbers),
@@ -170,9 +176,23 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                   SizedBox(
                     width: 500,
                     child: TextField(
+                      controller: addressController,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(Icons.location_on),
+                        labelText: 'Address',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 500,
+                    child: TextField(
                       controller: landmarkController,
                       decoration: const InputDecoration(
-                         filled: true,
+                        filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(),
                         suffixIcon: Icon(Icons.location_on),
@@ -186,10 +206,10 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                     child: TextField(
                       controller: contactController,
                       decoration: const InputDecoration(
-                         filled: true,
+                        filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.location_on),
+                        suffixIcon: Icon(Icons.numbers),
                         labelText: 'Contact Number',
                       ),
                     ),
@@ -202,7 +222,9 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       style: TextButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(13, 71, 161, 1),
                       ),
-                      onPressed: submitForm,
+                      onPressed: () {
+                        submitForm('reconnection');
+                      },
                       child: const Text(
                         'SUBMIT',
                         style: TextStyle(

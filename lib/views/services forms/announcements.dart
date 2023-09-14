@@ -10,6 +10,8 @@ import 'package:nwd/main_view_widgets/dialog.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 
+import 'transfer/transfer_ownership.dart';
+
 class Announcements extends StatefulWidget {
   const Announcements({super.key});
 
@@ -20,15 +22,16 @@ class Announcements extends StatefulWidget {
 class _AnnouncementsState extends State<Announcements> {
   List<Map<String, dynamic>> announcements = [];
 
+
   @override
   void initState() {
     super.initState();
-    fetchAnnouncements();
+    fetchAnnouncements('announcements');
   }
 
-  Future<void> fetchAnnouncements() async {
+  Future<void> fetchAnnouncements(String tableName) async {
     final response = await http.get(
-        Uri.parse('http://localhost/nwd/user-services/fetch_announcement.php'));
+        Uri.parse('http://localhost/nwd/user-services/fetch.php?table=$tableName'));
     if (response.statusCode == 200) {
       setState(() {
         announcements =
@@ -49,8 +52,7 @@ class _AnnouncementsState extends State<Announcements> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.transparent,
         onPressed: () {
-          _openWebsiteURL(
-              'https://www.facebook.com/nwdcustservice/');
+          _openWebsiteURL('https://www.facebook.com/nwdcustservice/');
         },
         child: const Image(
           image: AssetImage('assets/images/messenger.png'),
@@ -71,6 +73,10 @@ class _AnnouncementsState extends State<Announcements> {
                     builder: (BuildContext context) {
                       return const ConnectionDialog();
                     });
+              } else if (value.route == '/transfer-ownership') {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return const TransferDialog();
+                });
               }
             })
           : null,
@@ -109,19 +115,13 @@ class _AnnouncementsState extends State<Announcements> {
                                 announcements[index]['title'],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 25, color: Colors.blue),
                               ),
                               Text(
                                 DateFormat('MMMM d, y').format(
-                                  DateTime.parse(
-                                      announcements[index]['date']),
+                                  DateTime.parse(announcements[index]['date']),
                                 ),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: const TextStyle(fontSize: 20),
                               ),
                               const SizedBox(
                                 height: 20,
@@ -130,9 +130,7 @@ class _AnnouncementsState extends State<Announcements> {
                                 announcements[index]['content'],
                                 textAlign: TextAlign.start,
                                 style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                                    fontSize: 20, color: Colors.black),
                               ),
                             ],
                           ),

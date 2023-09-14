@@ -1,73 +1,126 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_web_libraries_in_flutter
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:nwd/main_view_widgets/appbar.dart';
-import 'package:nwd/main_view_widgets/dialog.dart';
-import 'package:nwd/main_view_widgets/routes.dart';
-import 'package:nwd/main_view_widgets/sidebar.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
-import 'dart:html' as html;
+import 'package:http/http.dart' as http;
+import '../../../../main_view_widgets/appbar.dart';
+import '../../../../main_view_widgets/dialog.dart';
+import '../../../../main_view_widgets/routes.dart';
+import '../../../../main_view_widgets/sidebar.dart';
+import '../transfer_ownership.dart';
 
-import 'transfer/transfer_ownership.dart';
-
-class Disconnection extends StatefulWidget {
-  const Disconnection({Key? key}) : super(key: key);
+class NormalTransferMain extends StatefulWidget {
+  const NormalTransferMain({super.key});
 
   @override
-  State<Disconnection> createState() => _DisconnectionState();
+  State<NormalTransferMain> createState() => _NormalTransferMainState();
 }
 
-class _DisconnectionState extends State<Disconnection> {
-  final accountNameController = TextEditingController();
-  final accountNumberController = TextEditingController();
-  final addressController = TextEditingController();
-  final landmarkController = TextEditingController();
-  final contactController = TextEditingController();
+class _NormalTransferMainState extends State<NormalTransferMain> {
+  TextEditingController oldAccountNameController = TextEditingController();
+  TextEditingController accountNumberController = TextEditingController();
+  TextEditingController newAccountNameController = TextEditingController();
+  TextEditingController contactNumberController = TextEditingController();
 
-  void submitForm(String table) async {
-    var url = Uri.parse('http://localhost/nwd/user-services/add.php');
+  String? waiver;
 
-    var response = await http.post(url, body: {
-      'accountName': accountNameController.text,
-      'accountNumber': accountNumberController.text,
-      'address': addressController.text,
-      'landmark': landmarkController.text,
-      'contact': contactController.text,
-      'table': table,
-    });
+  List<int>? waiverbyte;
 
+  Future<void> chooseFile2() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null) {
+      setState(() {
+        waiver = result.files.single.name;
+        waiverbyte = result.files.single.bytes;
+      });
+    }
+  }
+
+  Future<void> submitFile() async {
+    if (waiverbyte == null) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error...',
+        text: 'Please choose all files before submitting.',
+      );
+      return;
+    }
+    final oldAccountName = oldAccountNameController.text;
+    final accountNumber = accountNumberController.text;
+    final newAccountName = newAccountNameController.text;
+    final contactNumber = contactNumberController.text;
+
+    final waiverName = waiver!;
+
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://localhost/nwd/transfer/deceased_main.php'),
+    );
+    request.fields['oldAccountName'] = oldAccountName;
+    request.fields['accountNumber'] = accountNumber;
+    request.fields['newAccountName'] = newAccountName;
+    request.fields['contactNumber'] = contactNumber;
+
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file2',
+        waiverbyte!,
+        filename: waiverName,
+        contentType: MediaType('application', 'octet-stream'),
+      ),
+    );
+
+    final response = await request.send();
     if (response.statusCode == 200) {
-      if (response.body == 'success') {
-        QuickAlert.show(
-          context: context,
-          onConfirmBtnTap: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return const MainView();
-            }), (route) => false);
-          },
-          type: QuickAlertType.success,
-          text: 'Request Submitted Successfully',
-        );
-      } else {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Request Submission Failed',
-        );
-      }
+      QuickAlert.show(
+        barrierDismissible: false,
+        context: context,
+        title: 'Application Submitted!',
+        onConfirmBtnTap: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) {
+            return const MainView();
+          }), (route) => false);
+        },
+        type: QuickAlertType.success,
+        text: 'Please wait for our SMS update',
+      );
     } else {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
-        text: 'Error: ${response.statusCode}',
+        title: 'Error...',
+        text: 'Failed to Upload Files',
       );
     }
   }
 
-  void _openWebsiteURL(String url) {
-    html.window.open(url, '_blank');
+  Widget fileButton(
+      String? fileName, String buttonText, VoidCallback onPressed) {
+    return SizedBox(
+      width: 500,
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              fileName == null ? buttonText : '$buttonText ($fileName)',
+              style: TextStyle(
+                color: fileName != null ? Colors.black : Colors.grey,
+              ),
+            ),
+            trailing: IconButton(
+              onPressed: onPressed,
+              icon: const Icon(Icons.folder),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+        ],
+      ),
+    );
   }
 
   @override
@@ -75,15 +128,6 @@ class _DisconnectionState extends State<Disconnection> {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isNarrowScreen = screenWidth <= 800;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        onPressed: () {
-          _openWebsiteURL('https://www.facebook.com/nwdcustservice/');
-        },
-        child: const Image(
-          image: AssetImage('assets/images/messenger.png'),
-        ),
-      ),
       appBar: CustomAppBar(isNarrowScreen: isNarrowScreen),
       drawer: isNarrowScreen || screenWidth == 800
           ? CustomDrawer(onMenuSelected: (value) {
@@ -100,21 +144,23 @@ class _DisconnectionState extends State<Disconnection> {
                       return const ConnectionDialog();
                     });
               } else if (value.route == '/transfer-ownership') {
-                showDialog(context: context, builder: (BuildContext context) {
-                  return const TransferDialog();
-                });
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const TransferDialog();
+                    });
               }
             })
           : null,
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/background.jpg'),
-                fit: BoxFit.cover),
-          ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/background.jpg'),
+              fit: BoxFit.cover),
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -127,7 +173,7 @@ class _DisconnectionState extends State<Disconnection> {
                     width: MediaQuery.of(context).size.width,
                   ),
                   const Text(
-                    'Disconnection Form',
+                    'Transfer of Ownership\n(Normal Transfer)',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,
@@ -140,13 +186,13 @@ class _DisconnectionState extends State<Disconnection> {
                   SizedBox(
                     width: 500,
                     child: TextField(
-                      controller: accountNameController,
+                      controller: oldAccountNameController,
                       decoration: const InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
                         suffixIcon: Icon(Icons.person),
                         border: OutlineInputBorder(),
-                        labelText: 'Account Name',
+                        labelText: 'Old Account Name',
                       ),
                     ),
                   ),
@@ -168,13 +214,13 @@ class _DisconnectionState extends State<Disconnection> {
                   SizedBox(
                     width: 500,
                     child: TextField(
-                      controller: addressController,
+                      controller: newAccountNameController,
                       decoration: const InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        suffixIcon: Icon(Icons.location_pin),
+                        suffixIcon: Icon(Icons.person_add),
                         border: OutlineInputBorder(),
-                        labelText: 'Address',
+                        labelText: 'New Account Name',
                       ),
                     ),
                   ),
@@ -182,21 +228,7 @@ class _DisconnectionState extends State<Disconnection> {
                   SizedBox(
                     width: 500,
                     child: TextField(
-                      controller: landmarkController,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: Icon(Icons.location_pin),
-                        border: OutlineInputBorder(),
-                        labelText: 'Landmark',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 500,
-                    child: TextField(
-                      controller: contactController,
+                      controller: contactNumberController,
                       decoration: const InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -206,6 +238,8 @@ class _DisconnectionState extends State<Disconnection> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  fileButton(waiver, 'Waiver', chooseFile2),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -218,7 +252,7 @@ class _DisconnectionState extends State<Disconnection> {
                         ),
                       ),
                       onPressed: () {
-                        submitForm('disconnection');
+                        submitFile();
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),

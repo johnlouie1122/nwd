@@ -49,23 +49,25 @@ class _CertificateState extends State<Certificate> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(50.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/certificate.png'),
-                        fit: BoxFit.cover),
-                  ),
-                  child: Center(
-                    child: Text(
-                      generatedCode,
-                      style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.blue),
+                child: FittedBox(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/certificate.png'),
+                          fit: BoxFit.cover),
+                    ),
+                    child: Center(
+                      child: Text(
+                        generatedCode,
+                        style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.blue),
+                      ),
                     ),
                   ),
                 ),

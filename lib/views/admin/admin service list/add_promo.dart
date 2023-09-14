@@ -1,18 +1,18 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:nwd/views/admin/admin%20service%20list/announcement_list.dart';
+import 'package:nwd/views/admin/admin%20service%20list/promo_list.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:http/http.dart' as http;
 
-class AddAnnouncement extends StatefulWidget {
-  const AddAnnouncement({super.key});
+class AddAPromo extends StatefulWidget {
+  const AddAPromo({super.key});
 
   @override
-  State<AddAnnouncement> createState() => AddAnnouncementState();
+  State<AddAPromo> createState() => AddAPromoState();
 }
 
-class AddAnnouncementState extends State<AddAnnouncement> {
+class AddAPromoState extends State<AddAPromo> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
@@ -23,18 +23,21 @@ class AddAnnouncementState extends State<AddAnnouncement> {
     super.dispose();
   }
 
-  void submitDetails() {
+  void submitDetails(String db) {
     String title = _titleController.text;
     String content = _contentController.text;
+    
+    
 
     Map<String, String> requestBody = {
+      'db': db,
       'title': title,
       'content': content,
     };
 
     http
         .post(
-      Uri.parse('http://localhost/nwd/admin/add_announcement.php'),
+      Uri.parse('http://localhost/nwd/admin/add.php'),
       body: requestBody,
     )
         .then((response) {
@@ -56,6 +59,7 @@ class AddAnnouncementState extends State<AddAnnouncement> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 1.5,
         height: 500,
@@ -64,9 +68,10 @@ class AddAnnouncementState extends State<AddAnnouncement> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'ADD ANNOUNCEMENT',
+              'ADD PROMO',
               style: TextStyle(
                 fontSize: 25,
+                color: Colors.blue,
                 fontWeight: FontWeight.w900,
                 fontStyle: FontStyle.italic,
               ),
@@ -112,38 +117,40 @@ class AddAnnouncementState extends State<AddAnnouncement> {
               width: MediaQuery.of(context).size.width / 3,
               height: 40,
               child: ElevatedButton(
+                
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 onPressed: () {
                   if (_validateFields()) {
-                    submitDetails();
+                    submitDetails('promos');
                     QuickAlert.show(
                       context: context,
                       onConfirmBtnTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return const AnnouncementList();
+                            return const PromoList();
                           },
                         ));
                       },
                       type: QuickAlertType.success,
-                      text: 'Announcement Successfully Posted',
+                      text: 'Promo Posted',
                     );
                   } else {
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.error,
-                      text: 'Please enter all required fields!',
+                      text: 'Please enter all required details!',
                     );
                   }
                 },
                 child: const Text(
                   'POST',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

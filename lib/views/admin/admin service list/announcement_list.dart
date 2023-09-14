@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nwd/views/admin/admin%20service%20list/announcement.dart';
+import 'package:nwd/views/admin/admin%20service%20list/add_announcement.dart';
 import 'package:nwd/views/admin/widgets/admindrawer.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -24,12 +24,12 @@ class _AnnouncementListState extends State<AnnouncementList> {
   @override
   void initState() {
     super.initState();
-    fetchAnnouncements();
+    fetchAnnouncements('announcements');
   }
 
-  Future<void> fetchAnnouncements() async {
+  Future<void> fetchAnnouncements(String tableName) async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/fetch_announcement.php'));
+        .get(Uri.parse('http://localhost/nwd/admin/get_servicelist.php?table=$tableName'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
@@ -45,22 +45,23 @@ class _AnnouncementListState extends State<AnnouncementList> {
         body: {'title': title},
       );
       if (response.statusCode == 200) {
-        fetchAnnouncements();
+        fetchAnnouncements('announcements');
       } else {
         print('Error deleting announcement');
       }
     }
   }
 
-  Future<void> editAnnouncement(String title, String content) async {
+  Future<void> editAnnouncement(String title, String content, String db) async {
     if (currentTitle != null && currentContent != null) {
       final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/edit_announcement.php'),
+        Uri.parse('http://localhost/nwd/admin/update.php'),
         body: {
           'currentTitle': currentTitle!,
           'currentContent': currentContent!,
           'title': title,
           'content': content,
+          'db': db,
         },
       );
       if (response.statusCode == 200) {
@@ -78,7 +79,7 @@ class _AnnouncementListState extends State<AnnouncementList> {
             );
           },
         );
-        fetchAnnouncements();
+        fetchAnnouncements('announcements');
       } else {
         QuickAlert.show(
           context: context,
@@ -103,7 +104,10 @@ class _AnnouncementListState extends State<AnnouncementList> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
-        title: const Text('Announcements'),
+        title: const Text(
+          'Announcements',
+          style: TextStyle(color: Colors.blue, fontSize: 25),
+        ),
       ),
       drawer: const DrawerWidget(),
       body: SingleChildScrollView(
@@ -121,7 +125,7 @@ class _AnnouncementListState extends State<AnnouncementList> {
                   tileColor: tileColor,
                   title: Text(
                     announcement['title'],
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   ),
                   onTap: () {
                     showDialog(
@@ -136,31 +140,29 @@ class _AnnouncementListState extends State<AnnouncementList> {
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   'TITLE',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
                               Text(
                                 announcement['title'],
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 25),
                               ),
                               const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   'CONTENT',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.blue),
                                 ),
                               ),
                               Text(
                                 announcement['content'],
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 25),
                               ),
                             ],
                           ),
@@ -370,7 +372,7 @@ class _AnnouncementListState extends State<AnnouncementList> {
                                                   onPressed: () {
                                                     editAnnouncement(
                                                         editedTitle,
-                                                        editedContent);
+                                                        editedContent, 'announcements');
                                                   },
                                                   child: const Text(
                                                     'Save',

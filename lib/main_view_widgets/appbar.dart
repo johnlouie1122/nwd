@@ -40,12 +40,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               height: 60,
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (BuildContext context) {
                         return const MainView();
                       },
                     ),
+                    (Route<dynamic> route) => false,
                   );
                 },
                 child: const Image(
@@ -126,12 +127,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return const Announcements();
                           },
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     child: Text(
@@ -143,12 +145,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return const Promos();
                           },
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     child: Text(
@@ -160,12 +163,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return const AboutUs();
                           },
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     child: Text(
@@ -177,12 +181,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return const CustomerFeedback();
                           },
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     child: Text(

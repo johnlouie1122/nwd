@@ -9,6 +9,8 @@ import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
 import 'dart:html' as html;
 
+import 'transfer/transfer_ownership.dart';
+
 class CustomerFeedback extends StatefulWidget {
   const CustomerFeedback({super.key});
 
@@ -93,107 +95,113 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
                     builder: (BuildContext context) {
                       return const ConnectionDialog();
                     });
+              } else if (value.route == '/transfer-ownership') {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return const TransferDialog();
+                });
               }
             })
           : null,
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/background.jpg'),
-                  fit: BoxFit.cover)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 20,
-                width: MediaQuery.of(context).size.width,
-              ),
-              const Text(
-                'CUSTOMER FEEDBACK',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.blue),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(
-                  width: 500,
-                  child: TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'NAME (OPTIONAL)',
-                    ),
-                  ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/background.jpg'),
+                fit: BoxFit.cover)),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(
-                  width: 500,
-                  child: TextField(
-                    maxLines: null,
-                    controller: _feedbackController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'FEEDBACK',
-                    ),
-                  ),
+                const Text(
+                  'CUSTOMER FEEDBACK',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.blue),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(
-                  width: 500,
-                  height: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: 500,
+                    child: TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'NAME (OPTIONAL)',
                       ),
                     ),
-                    onPressed: () {
-                      if (_validateFields()) {
-                        submitDetails();
-                        QuickAlert.show(
-                          context: context,
-                          onConfirmBtnTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: 500,
+                    child: TextField(
+                      maxLines: null,
+                      controller: _feedbackController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'FEEDBACK',
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: 500,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_validateFields()) {
+                          submitDetails();
+                          QuickAlert.show(
+                            context: context,
+                            onConfirmBtnTap: () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
                                 return const MainView();
-                              },
-                            ));
-                          },
-                          type: QuickAlertType.success,
-                          text: 'Basic Details submitted!',
-                        );
-                      } else {
-                        QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.error,
-                          text: 'Please enter all required details!',
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'SUBMIT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                              }), (route) => false);
+                            },
+                            type: QuickAlertType.success,
+                            text: 'Basic Details submitted!',
+                          );
+                        } else {
+                          QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.error,
+                            text: 'Please enter all required details!',
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'SUBMIT',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

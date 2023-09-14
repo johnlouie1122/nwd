@@ -7,6 +7,8 @@ import 'package:nwd/main_view_widgets/dialog.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 
+import 'transfer/transfer_ownership.dart';
+
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
 
@@ -48,6 +50,10 @@ class _AboutUsState extends State<AboutUs> {
                     builder: (BuildContext context) {
                       return const ConnectionDialog();
                     });
+              } else if (value.route == '/transfer-ownership') {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return const TransferDialog();
+                });
               }
             })
           : null,

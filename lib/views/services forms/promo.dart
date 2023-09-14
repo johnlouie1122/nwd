@@ -11,6 +11,8 @@ import 'package:nwd/main_view_widgets/dialog.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 
+import 'transfer/transfer_ownership.dart';
+
 class Promos extends StatefulWidget {
   const Promos({super.key});
 
@@ -24,12 +26,12 @@ class _PromosState extends State<Promos> {
   @override
   void initState() {
     super.initState();
-    fetchPromos();
+    fetchPromos('promos');
   }
 
-  Future<void> fetchPromos() async {
+  Future<void> fetchPromos(String table) async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/user-services/fetch_promos.php'));
+        .get(Uri.parse('http://localhost/nwd/user-services/fetch.php?table=$table'));
     if (response.statusCode == 200) {
       setState(() {
         promos = List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -70,6 +72,10 @@ class _PromosState extends State<Promos> {
                     builder: (BuildContext context) {
                       return const ConnectionDialog();
                     });
+              } else if (value.route == '/transfer-ownership') {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return const TransferDialog();
+                });
               }
             })
           : null,
@@ -105,28 +111,20 @@ class _PromosState extends State<Promos> {
                             Text(
                               promos[index]['title'],
                               style: const TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 25, color: Colors.blue),
                             ),
                             Text(
                               DateFormat('MMMM d, y').format(
                                 DateTime.parse(promos[index]['date']),
                               ),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(fontSize: 20),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             Text(
                               promos[index]['content'],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ],
                         ),

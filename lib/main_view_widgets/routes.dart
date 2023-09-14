@@ -6,7 +6,7 @@ import 'package:nwd/views/services%20forms/customer_feedback.dart';
 import 'package:nwd/views/services%20forms/disconnection.dart';
 import 'package:nwd/views/services%20forms/promo.dart';
 import 'package:nwd/views/services%20forms/reconnection.dart';
-import 'package:nwd/views/services%20forms/transfer_ownership.dart';
+
 import 'package:nwd/views/services%20forms/water_meter_calibration.dart';
 
 class RoutesWidget {
@@ -14,8 +14,6 @@ class RoutesWidget {
     '/announcements': (BuildContext context) => const Announcements(),
     '/reconnection': (BuildContext context) => const ReconnectionForm(),
     '/disconnection': (BuildContext context) => const Disconnection(),
-    '/transfer-ownership': (BuildContext context) =>
-        const TransferOfOwnership(),
     '/water-meter-calibration': (BuildContext context) =>
         const WaterMeterCalibration(),
     '/change-water-meter': (BuildContext context) => const ChangeWaterMeter(),

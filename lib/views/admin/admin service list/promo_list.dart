@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:nwd/views/admin/admin%20service%20list/promo.dart';
+import 'package:nwd/views/admin/admin%20service%20list/add_promo.dart';
 import 'package:nwd/views/admin/widgets/admindrawer.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;
@@ -24,12 +24,12 @@ class _PromoListState extends State<PromoList> {
   @override
   void initState() {
     super.initState();
-    fetchPromos();
+    fetchPromos('promos');
   }
 
-  Future<void> fetchPromos() async {
+  Future<void> fetchPromos(String tableName) async {
     final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/fetch_promos.php'));
+        .get(Uri.parse('http://localhost/nwd/admin/get_servicelist.php?table=$tableName'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
@@ -45,22 +45,23 @@ class _PromoListState extends State<PromoList> {
         body: {'title': title},
       );
       if (response.statusCode == 200) {
-        fetchPromos();
+        fetchPromos('promos');
       } else {
         print('Error deleting announcement');
       }
     }
   }
 
-  Future<void> editAnnouncement(String title, String content) async {
+  Future<void> editAnnouncement(String title, String content, String db) async {
     if (currentTitle != null && currentContent != null) {
       final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/edit_promo.php'),
+        Uri.parse('http://localhost/nwd/admin/update.php'),
         body: {
           'currentTitle': currentTitle!,
           'currentContent': currentContent!,
           'title': title,
           'content': content,
+          'db': db,
         },
       );
       if (response.statusCode == 200) {
@@ -78,7 +79,7 @@ class _PromoListState extends State<PromoList> {
             );
           },
         );
-        fetchPromos();
+        fetchPromos('promos');
       } else {
         QuickAlert.show(
           context: context,
@@ -104,9 +105,8 @@ class _PromoListState extends State<PromoList> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         title: const Text(
-          'PROMOS',
-          style: TextStyle(
-              color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 25),
+          'Promos',
+          style: TextStyle(color: Colors.blue, fontSize: 25),
         ),
       ),
       drawer: const DrawerWidget(),
@@ -119,23 +119,19 @@ class _PromoListState extends State<PromoList> {
               itemBuilder: (context, index) {
                 var tileColor =
                     index % 2 == 0 ? Colors.white : Colors.grey.shade100;
-                final announcement = promos[index];
+                final promo = promos[index];
                 return ListTile(
                   hoverColor: Colors.blue.shade100,
                   tileColor: tileColor,
                   title: Text(
-                    announcement['title'],
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    promo['title'],
+                    style: const TextStyle(fontSize: 15),
                   ),
                   trailing: Text(
                     DateFormat('MMMM d, y').format(
-                      DateTime.parse(announcement['date']),
+                      DateTime.parse(promo['date']),
                     ),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   ),
                   onTap: () {
                     showDialog(
@@ -149,31 +145,31 @@ class _PromoListState extends State<PromoList> {
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   'TITLE',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.blue),
                                 ),
                               ),
                               Text(
-                                announcement['title'],
+                                promo['title'],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
+                                  fontSize: 25,
+                                ),
                               ),
                               const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   'CONTENT',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.blue),
                                 ),
                               ),
                               Text(
-                                announcement['content'],
+                                promo['content'],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
+                                  fontSize: 25,
+                                ),
                               ),
                             ],
                           ),
@@ -193,7 +189,7 @@ class _PromoListState extends State<PromoList> {
                                     context: context,
                                     showCancelBtn: true,
                                     confirmBtnText: 'Yes',
-                                    type: QuickAlertType.warning,
+                                    type: QuickAlertType.error,
                                     text: 'Are you sure you want to delete?',
                                     onConfirmBtnTap: () {
                                       QuickAlert.show(
@@ -201,8 +197,8 @@ class _PromoListState extends State<PromoList> {
                                         type: QuickAlertType.success,
                                         text: 'Post successfully deleted!',
                                         onConfirmBtnTap: () async {
-                                          if (announcement['title'] != null) {
-                                            deletePromo(announcement['title']);
+                                          if (promo['title'] != null) {
+                                            deletePromo(promo['title']);
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
                                               MaterialPageRoute(
@@ -239,14 +235,11 @@ class _PromoListState extends State<PromoList> {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        String editedTitle =
-                                            announcement['title'];
-                                        String editedContent =
-                                            announcement['content'];
+                                        String editedTitle = promo['title'];
+                                        String editedContent = promo['content'];
 
-                                        currentTitle = announcement['title'];
-                                        currentContent =
-                                            announcement['content'];
+                                        currentTitle = promo['title'];
+                                        currentContent = promo['content'];
                                         return AlertDialog(
                                           scrollable: true,
                                           content: SizedBox(
@@ -394,7 +387,7 @@ class _PromoListState extends State<PromoList> {
                                                   onPressed: () {
                                                     editAnnouncement(
                                                         editedTitle,
-                                                        editedContent);
+                                                        editedContent, 'promos');
                                                   },
                                                   child: const Text(
                                                     'Save',

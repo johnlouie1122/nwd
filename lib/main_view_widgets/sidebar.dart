@@ -39,7 +39,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         AdminMenuItem(
           title: 'Announcements',
           route: '/announcements',
-          icon: FontAwesomeIcons.bullhorn,
+          icon: FontAwesomeIcons.bullhorn,    
         ),
         AdminMenuItem(
           title: 'Water Connections',
@@ -100,7 +100,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
       ], 
       selectedRoute: '/', 
-       onSelected: widget.onMenuSelected,
+       onSelected: widget.onMenuSelected, 
+       
      
     
     );

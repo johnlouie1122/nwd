@@ -1,8 +1,8 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:nwd/views/New%20Water%20Connection/views/certificate.dart';
-import 'package:nwd/views/New%20Water%20Connection/views/video.dart';
+import 'package:nwd/views/services%20forms/New%20Water%20Connection/views/certificate.dart';
+import 'package:nwd/views/services%20forms/New%20Water%20Connection/views/video.dart';
 import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;

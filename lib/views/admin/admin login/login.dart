@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nwd/views/admin/homepage/adminpage.dart';
+import 'package:nwd/views/admin/widgets/user_details.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 
 class AdminLogin extends StatefulWidget {
@@ -35,17 +37,20 @@ class _AdminLoginState extends State<AdminLogin> {
     var response = await http.post(url, body: body);
 
     if (response.statusCode == 200) {
-      var responseData = json.decode(response.body);
+    var responseData = json.decode(response.body);
 
-      if (responseData['status'] == 'success') {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return const AdminHomePage();
-            },
-          ),
-          (Route<dynamic> route) => false,
-        );
+    if (responseData['status'] == 'success') {
+      var userDetailsProvider = Provider.of<UserProvider>(context, listen: false);
+      userDetailsProvider.userDetails = responseData['user']; 
+      
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return  AdminHomePage();
+          },
+        ),
+        (Route<dynamic> route) => false,
+      );
       } else {
         QuickAlert.show(
           context: context,

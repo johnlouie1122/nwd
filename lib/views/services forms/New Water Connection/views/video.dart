@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nwd/views/New%20Water%20Connection/views/questions.dart';
+import 'package:nwd/views/services%20forms/New%20Water%20Connection/views/questions.dart';
 import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:video_player/video_player.dart';

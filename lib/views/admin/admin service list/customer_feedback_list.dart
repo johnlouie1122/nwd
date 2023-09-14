@@ -80,7 +80,10 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Customer Feedback'),
+        title: const Text(
+          'Customer Feedback',
+          style: TextStyle(color: Colors.blue, fontSize: 25),
+        ),
       ),
       drawer: const DrawerWidget(),
       body: SingleChildScrollView(
@@ -99,13 +102,11 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
                     tileColor: tileColor,
                     title: Text(
                       feedback['name'],
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 15),
                     ),
                     trailing: Text(
                       feedback['type'],
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 15),
                     ),
                     onTap: () {
                       showDialog(
@@ -113,87 +114,107 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             scrollable: true,
-                            title: const Center(
-                              child: Text('Feedback'),
-                            ),
-                            content: Center(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.5,
-                                      child: Text(feedback['feedback'])),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              SizedBox(
-                                height: 40,
-                                width: 120,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
+                            content: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Customer Name',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.blue,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    QuickAlert.show(
-                                      context: context,
-                                      showCancelBtn: true,
-                                      confirmBtnText: 'Yes',
-                                      type: QuickAlertType.warning,
-                                      text: 'Are you sure you want to delete?',
-                                      onConfirmBtnTap: () {
-                                        QuickAlert.show(
-                                          context: context,
-                                          type: QuickAlertType.success,
-                                          text:
-                                              'Feedback successfully deleted!',
-                                          onConfirmBtnTap: () async {
-                                            if (feedback['id'] != null) {
-                                              deleteFeedback(feedback['id']);
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      const CustomerFeedbackList(),
-                                                ),
-                                                (Route<dynamic> route) => false,
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Delete',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.white),
+                                ),
+                                Text(
+                                  feedback['name'],
+                                  style: const TextStyle(
+                                    fontSize: 25,
                                   ),
                                 ),
+                                const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Feedback',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  feedback['feedback'],
+                                  style: const TextStyle(fontSize: 25),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  QuickAlert.show(
+                                    context: context,
+                                    showCancelBtn: true,
+                                    confirmBtnText: 'Yes',
+                                    type: QuickAlertType.warning,
+                                    text: 'Are you sure you want to delete?',
+                                    onConfirmBtnTap: () {
+                                      QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.success,
+                                        text: 'Feedback successfully deleted!',
+                                        onConfirmBtnTap: () async {
+                                          if (feedback['id'] != null) {
+                                            deleteFeedback(feedback['id']);
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const CustomerFeedbackList(),
+                                              ),
+                                              (Route<dynamic> route) => false,
+                                            );
+                                          }
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'Delete',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              SizedBox(
-                                height: 40,
-                                width: 120,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue),
-                                  onPressed: () {
-                                    QuickAlert.show(
-                                      context: context,
-                                      showCancelBtn: true,
-                                      confirmBtnText: 'Yes',
-                                      type: QuickAlertType.warning,
-                                      text: 'Are you sure',
-                                      onConfirmBtnTap: () async {
-                                        markFeedbackAsChecked(feedback['id']);
-                                      },
-                                    );
-                                  },
-                                  child: const Text('Mark as \nChecked', style: TextStyle(color: Colors.white),),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue),
+                                onPressed: () {
+                                  QuickAlert.show(
+                                    context: context,
+                                    showCancelBtn: true,
+                                    confirmBtnText: 'Yes',
+                                    type: QuickAlertType.warning,
+                                    text: 'Are you sure',
+                                    onConfirmBtnTap: () async {
+                                      markFeedbackAsChecked(feedback['id']);
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'Mark as Checked',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               )
                             ],

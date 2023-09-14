@@ -108,11 +108,11 @@ class _BasicDetailsRepresentativeState
                         QuickAlert.show(
                           context: context,
                           onConfirmBtnTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return const MainView();
-                              },
-                            ));
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                              return const MainView();
+                            }), (route) => false);
                           },
                           type: QuickAlertType.success,
                           text: 'Basic Details submitted!',
@@ -127,7 +127,8 @@ class _BasicDetailsRepresentativeState
                     },
                     child: const Text(
                       'Submit',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 )
