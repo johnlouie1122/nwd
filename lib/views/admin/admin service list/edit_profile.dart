@@ -64,7 +64,6 @@ class EditUserState extends State<EditUser> {
           request.fields['firstName'] = firstNameController.text;
           request.fields['lastName'] = lastNameController.text;
           request.fields['username'] = usernameController.text;
-          request.fields['password'] = passwordController.text;
           request.fields['imageName'] = waterpermitName;
 
           if (waterpermitbyte != null) {
@@ -190,7 +189,10 @@ class EditUserState extends State<EditUser> {
                             ),
                           ],
                         ),
-                        Text('$role'),
+                        Text(
+                          '$role',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     Column(
@@ -238,23 +240,6 @@ class EditUserState extends State<EditUser> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        SizedBox(
-                          width: 300,
-                          child: TextField(
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              prefixIcon: const Icon(Icons.person_rounded),
-                              labelText: 'Password',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Row(
                           children: [
                             SizedBox(

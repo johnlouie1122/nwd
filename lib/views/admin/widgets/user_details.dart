@@ -13,7 +13,6 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   set image(String? newValue) {
     _image = newValue;
     notifyListeners();

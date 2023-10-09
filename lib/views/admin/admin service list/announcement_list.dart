@@ -402,6 +402,7 @@ class _AnnouncementListState extends State<AnnouncementList> {
             ),
           ],
         ),
+     
       ),
     );
   }

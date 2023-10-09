@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:nwd/views/services%20forms/transfer/main/deceasedMain.dart';
 import 'package:nwd/views/services%20forms/transfer/main/normal_transfer.dart';
 import 'package:nwd/views/services%20forms/transfer/main/propertyMain.dart';
+import 'package:nwd/views/services%20forms/transfer/representative/NormalRep.dart';
+import 'package:nwd/views/services%20forms/transfer/representative/deathRep.dart';
+import 'package:nwd/views/services%20forms/transfer/representative/newlotrep.dart';
 
 class TransferDialog extends StatefulWidget {
   const TransferDialog({super.key});
@@ -56,6 +59,7 @@ class _TransferDialogState extends State<TransferDialog> {
             child: SizedBox(
               width: 200,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () {
                   showDialog(
                       context: context,
@@ -163,14 +167,16 @@ class _TransferDialogState extends State<TransferDialog> {
                                                         children: [
                                                           ElevatedButton(
                                                             onPressed: () {
-                                                               Navigator.of(context).pushAndRemoveUntil(
-                                                                    MaterialPageRoute(builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                  return const DeceasedMain();
-                                                                }),
-                                                                    (route) =>
-                                                                        false);
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pushAndRemoveUntil(
+                                                                      MaterialPageRoute(builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                return const DeceasedMain();
+                                                              }),
+                                                                      (route) =>
+                                                                          false);
                                                             },
                                                             child:
                                                                 const SizedBox(
@@ -229,7 +235,16 @@ class _TransferDialogState extends State<TransferDialog> {
                                                                   .spaceEvenly,
                                                           children: [
                                                             ElevatedButton(
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                Navigator.of(context).pushAndRemoveUntil(
+                                                                    MaterialPageRoute(builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                  return const NormalTransRepresentative();
+                                                                }),
+                                                                    (route) =>
+                                                                        false);
+                                                              },
                                                               child:
                                                                   const SizedBox(
                                                                 height: 50,
@@ -245,7 +260,11 @@ class _TransferDialogState extends State<TransferDialog> {
                                                             ),
                                                             ElevatedButton(
                                                                 onPressed:
-                                                                    () {},
+                                                                    () {
+                                                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
+                                                                  return const NewLotRep();
+                                                                }), (route) => false);
+                                                                    },
                                                                 child:
                                                                     const SizedBox(
                                                                   height: 50,
@@ -277,7 +296,11 @@ class _TransferDialogState extends State<TransferDialog> {
                                                                   .spaceEvenly,
                                                           children: [
                                                             ElevatedButton(
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
+                                                                  return const DeathRepresentative();
+                                                                }), (route) => false);
+                                                              },
                                                               child:
                                                                   const SizedBox(
                                                                 height: 50,
@@ -328,7 +351,7 @@ class _TransferDialogState extends State<TransferDialog> {
                         );
                       });
                 },
-                child: const Text('S T A R T'),
+                child: const Text('S T A R T', style: TextStyle(color: Colors.white),),
               ),
             ),
           ),

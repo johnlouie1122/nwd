@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nwd/views/admin/homepage/adminpage.dart';
+import 'package:nwd/views/admin/homepage/test.dart';
 import 'package:nwd/views/admin/widgets/user_details.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
@@ -37,20 +38,21 @@ class _AdminLoginState extends State<AdminLogin> {
     var response = await http.post(url, body: body);
 
     if (response.statusCode == 200) {
-    var responseData = json.decode(response.body);
+      var responseData = json.decode(response.body);
 
-    if (responseData['status'] == 'success') {
-      var userDetailsProvider = Provider.of<UserProvider>(context, listen: false);
-      userDetailsProvider.userDetails = responseData['user']; 
-      
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return  AdminHomePage();
-          },
-        ),
-        (Route<dynamic> route) => false,
-      );
+      if (responseData['status'] == 'success') {
+        var userDetailsProvider =
+            Provider.of<UserProvider>(context, listen: false);
+        userDetailsProvider.userDetails = responseData['user'];
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return AdminHomePage();
+            },
+          ),
+          (Route<dynamic> route) => false,
+        );
       } else {
         QuickAlert.show(
           context: context,
@@ -92,80 +94,84 @@ class _AdminLoginState extends State<AdminLogin> {
             fit: BoxFit.cover,
           ),
         ),
-        child: AlertDialog(
-          scrollable: true,
-          title: Column(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                width: 150,
-                height: 150,
+        child: Center(
+          child: SizedBox(
+            height: 500,
+            child: AlertDialog(
+              title: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 150,
+                    height: 150,
+                  ),
+                  const Text(
+                    'ADMIN LOGIN',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  ),
+                ],
               ),
-              const Text(
-                'ADMIN LOGIN',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-              ),
-            ],
-          ),
-          content: Column(
-            children: [
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  autofocus: true,
-                  onSubmitted: (value) {
-                    login();
-                  },
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      prefixIcon: Icon(Icons.person_rounded),
-                      labelText: 'ADMIN USER'),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  onSubmitted: (value) {
-                    login();
-                  },
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      prefixIcon: const Icon(Icons.lock),
-                      labelText: 'PASSWORD'),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 300,
-                height: 40,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5,
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+              content: Column(
+                children: [
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      autofocus: true,
+                      onSubmitted: (value) {
+                        login();
+                      },
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          prefixIcon: Icon(Icons.person_rounded),
+                          labelText: 'ADMIN USER'),
                     ),
                   ),
-                  onPressed: login,
-                  child: const Text(
-                    'LOGIN',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      onSubmitted: (value) {
+                        login();
+                      },
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          prefixIcon: const Icon(Icons.lock),
+                          labelText: 'PASSWORD'),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 300,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      onPressed: login,
+                      child: const Text(
+                        'LOGIN',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
-              const SizedBox(height: 10),
-            ],
+            ),
           ),
         ),
       ),

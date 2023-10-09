@@ -111,41 +111,41 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       return const ConnectionDialog();
                     });
               } else if (value.route == '/transfer-ownership') {
-                showDialog(context: context, builder: (BuildContext context) {
-                  return const TransferDialog();
-                });
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const TransferDialog();
+                    });
               }
             })
           : null,
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/background.jpg'),
-                fit: BoxFit.cover),
-          ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Flexible(
-                    child: Text(
-                      'Reconnection Form',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.blue),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: 500,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/background.jpg'),
+              fit: BoxFit.cover),
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Reconnection Form',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.blue),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: TextField(
                       autofocus: true,
                       controller: accountNameController,
@@ -158,9 +158,12 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 500,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: TextField(
                       controller: accountNumberController,
                       decoration: const InputDecoration(
@@ -172,9 +175,12 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 500,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: TextField(
                       controller: addressController,
                       decoration: const InputDecoration(
@@ -186,9 +192,12 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 500,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: TextField(
                       controller: landmarkController,
                       decoration: const InputDecoration(
@@ -200,9 +209,12 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 500,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: TextField(
                       controller: contactController,
                       decoration: const InputDecoration(
@@ -214,8 +226,11 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                  child: SizedBox(
                     width: 500,
                     height: 40,
                     child: TextButton(
@@ -234,53 +249,24 @@ class ReconnectionFormState extends State<ReconnectionForm> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Card(
-                    color: Colors.white,
-                    elevation: 5,
-                    child: Padding(
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  width: 500,
+                  child: Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text.rich(
+                      child: Text(
+                        'Note: Reconnection of accounts/line requires the payment of the full BALANCE and the RECONNECTION FEE of: PHP: 100.00',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red),
                         textAlign: TextAlign.center,
-                        TextSpan(
-                          text:
-                              'Note: Reconnection of accounts/line requires the payment of the \nfull ',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'BALANCE',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: ' plus, fontSize: 20,',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: ' reconnection fee of. ',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: 'Php 100.00',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                      )),
+                )
+              ],
             ),
           ),
         ),

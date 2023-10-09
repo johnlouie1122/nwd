@@ -1,44 +1,59 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:http/http.dart' as http;
 import '../../../../main_view_widgets/appbar.dart';
 import '../../../../main_view_widgets/dialog.dart';
 import '../../../../main_view_widgets/routes.dart';
 import '../../../../main_view_widgets/sidebar.dart';
+import '../../main.view.dart';
 import '../transfer_ownership.dart';
-import 'package:http/http.dart' as http;
 
-class NewPropertyMain extends StatefulWidget {
-  const NewPropertyMain({super.key});
+class NewLotRep extends StatefulWidget {
+  const NewLotRep({super.key});
 
   @override
-  State<NewPropertyMain> createState() => _NewPropertyMainState();
+  State<NewLotRep> createState() => _NewLotRepState();
 }
 
-class _NewPropertyMainState extends State<NewPropertyMain> {
+class _NewLotRepState extends State<NewLotRep> {
   TextEditingController oldAccountNameController = TextEditingController();
   TextEditingController accountNumberController = TextEditingController();
   TextEditingController newAccountNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
 
-  String? deedOfSale;
+  String? repId;
+  String? deedSale;
 
-  List<int>? deedOfSalebyte;
+  List<int>? repIdbyte;
+  List<int>? deedSalebyte;
+
+  Future<void> chooseFile1() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+
+    if (result != null) {
+      setState(() {
+        repId = result.files.single.name;
+        repIdbyte = result.files.single.bytes;
+      });
+    }
+  }
 
   Future<void> chooseFile2() async {
     final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
       setState(() {
-        deedOfSale = result.files.single.name;
-        deedOfSalebyte = result.files.single.bytes;
+        deedSale = result.files.single.name;
+        deedSalebyte = result.files.single.bytes;
       });
     }
   }
 
-  Future<void> submitFile() async {
-    if (deedOfSalebyte == null) {
+  Future<void> submitFile(String reason) async {
+    if (repIdbyte == null || deedSalebyte == null) {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
@@ -51,23 +66,32 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
     final accountNumber = accountNumberController.text;
     final newAccountName = newAccountNameController.text;
     final contactNumber = contactNumberController.text;
-
-    final deedOfSaleName = deedOfSale!;
+    final repIdName = repId!;
+    final deedSaleName = deedSale!;
 
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost/nwd/transfer/main-applicant/newLotMain.php'),
+      Uri.parse('http://localhost/nwd/transfer/representative/newlotrep.php'),
     );
     request.fields['oldAccountName'] = oldAccountName;
     request.fields['accountNumber'] = accountNumber;
     request.fields['newAccountName'] = newAccountName;
     request.fields['contactNumber'] = contactNumber;
+    request.fields['reason'] = reason;
 
     request.files.add(
       http.MultipartFile.fromBytes(
+        'file1',
+        repIdbyte!,
+        filename: repIdName,
+        contentType: MediaType('application', 'octet-stream'),
+      ),
+    );
+    request.files.add(
+      http.MultipartFile.fromBytes(
         'file2',
-        deedOfSalebyte!,
-        filename: deedOfSaleName,
+        deedSalebyte!,
+        filename: deedSaleName,
         contentType: MediaType('application', 'octet-stream'),
       ),
     );
@@ -171,7 +195,7 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                     width: MediaQuery.of(context).size.width,
                   ),
                   const Text(
-                    'Transfer of Ownership\n(New Property Owner)',
+                    'Transfer of Ownership\n(Representative)',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,
@@ -237,7 +261,10 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  fileButton(deedOfSale, 'Supporting Document', chooseFile2),
+                  fileButton(
+                      repId, 'Representative valid ID', chooseFile1),
+                  const SizedBox(height: 10),
+                  fileButton(deedSale, 'PROOF OF LAND OWNERSHIP', chooseFile2),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -250,7 +277,7 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                         ),
                       ),
                       onPressed: () {
-                        submitFile();
+                        submitFile('NEW PROPERTY OWNER');
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),

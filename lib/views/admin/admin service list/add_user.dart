@@ -13,7 +13,7 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  String _selectedRole = 'admin';
+  String _selectedRole = 'ADMIN';
   String _otherRole = '';
 
   final firstNameController = TextEditingController();
@@ -87,7 +87,7 @@ class _AddUserState extends State<AddUser> {
               ),
             ),
           ),
-          const Text('Select Role:'),
+          const Text('SELECT ROLE:'),
           DropdownButton<String>(
             value: _selectedRole,
             onChanged: (String? newValue) {
@@ -95,7 +95,7 @@ class _AddUserState extends State<AddUser> {
                 _selectedRole = newValue!;
               });
             },
-            items: <String>['admin', 'superadmin', 'other']
+            items: <String>['ADMIN', 'SUPERADMIN', 'other']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -106,7 +106,7 @@ class _AddUserState extends State<AddUser> {
               );
             }).toList(),
           ),
-          if (_selectedRole == 'other')
+          if (_selectedRole == 'OTHER')
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

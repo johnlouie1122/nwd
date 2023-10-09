@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nwd/main_view_widgets/appbar.dart';
 import 'package:nwd/main_view_widgets/dialog.dart';
+import 'package:nwd/main_view_widgets/footer.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 import 'package:nwd/views/services%20forms/main.view.dart';
@@ -109,100 +110,107 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
             image: DecorationImage(
                 image: AssetImage('assets/images/background.jpg'),
                 fit: BoxFit.cover)),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                  width: MediaQuery.of(context).size.width,
-                ),
-                const Text(
-                  'CUSTOMER FEEDBACK',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.blue),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    width: 500,
-                    child: TextField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'NAME (OPTIONAL)',
-                      ),
+        child: Column(
+          children: [
+          const Spacer(),
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                      width: MediaQuery.of(context).size.width,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    width: 500,
-                    child: TextField(
-                      maxLines: null,
-                      controller: _feedbackController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'FEEDBACK',
-                      ),
+                    const Text(
+                      'CUSTOMER FEEDBACK',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.blue),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    width: 500,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_validateFields()) {
-                          submitDetails();
-                          QuickAlert.show(
-                            context: context,
-                            onConfirmBtnTap: () {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                return const MainView();
-                              }), (route) => false);
-                            },
-                            type: QuickAlertType.success,
-                            text: 'Basic Details submitted!',
-                          );
-                        } else {
-                          QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.error,
-                            text: 'Please enter all required details!',
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'SUBMIT',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 500,
+                        child: TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'NAME (OPTIONAL)',
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 500,
+                        child: TextField(
+                          maxLines: null,
+                          controller: _feedbackController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'FEEDBACK',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 500,
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_validateFields()) {
+                              submitDetails();
+                              QuickAlert.show(
+                                context: context,
+                                onConfirmBtnTap: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                    return const MainView();
+                                  }), (route) => false);
+                                },
+                                type: QuickAlertType.success,
+                                text: 'Basic Details submitted!',
+                              );
+                            } else {
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.error,
+                                text: 'Please enter all required details!',
+                              );
+                            }
+                          },
+                          child: const Text(
+                            'SUBMIT',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            const Spacer(),
+            const Footer(),
+          ],
         ),
       ),
     );

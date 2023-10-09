@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:nwd/views/admin/admin%20service%20list/add_user.dart';
 import 'package:nwd/views/admin/widgets/admindrawer.dart';
 import 'package:http/http.dart' as http;
-import 'package:quickalert/quickalert.dart';
 
 class UserAccounts extends StatefulWidget {
   const UserAccounts({super.key});
@@ -49,24 +48,6 @@ class _UserAccountsState extends State<UserAccounts> {
       setState(() {
         filteredServiceData = List.from(serviceData);
       });
-    }
-  }
-
-  Future<void> updateStatus(String accountName, String status) async {
-    final url =
-        Uri.parse('http://localhost/nwd/admin/update_service_status.php');
-    final response = await http.post(
-      url,
-      body: {
-        'accountName': accountName,
-        'status': status,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print('Status updated successfully');
-    } else {
-      print('Error updating status: ${response.body}');
     }
   }
 
@@ -284,81 +265,6 @@ class _UserAccountsState extends State<UserAccounts> {
                                 ],
                               ),
                             ),
-                            actions: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  QuickAlert.show(
-                                    context: context,
-                                    showCancelBtn: true,
-                                    confirmBtnText: 'Yes',
-                                    type: QuickAlertType.error,
-                                    title: 'Confirmation. . .',
-                                    text: 'Are you sure you want to Decline?',
-                                    onConfirmBtnTap: () {
-                                      updateStatus(username, 'DECLINED');
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const UserAccounts();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: const Text(
-                                  'Decline',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  QuickAlert.show(
-                                    context: context,
-                                    showCancelBtn: true,
-                                    confirmBtnText: 'Yes',
-                                    type: QuickAlertType.success,
-                                    title: 'Confirmation. . .',
-                                    text: 'Are you sure you want to Approve?',
-                                    onConfirmBtnTap: () {
-                                      QuickAlert.show(
-                                        context: context,
-                                        type: QuickAlertType.success,
-                                        text: 'Service Successfully Approved',
-                                        onConfirmBtnTap: () {
-                                          updateStatus(username, 'APPROVED');
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return const UserAccounts();
-                                              },
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                                child: const Text(
-                                  'Approve',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
                           );
                         },
                       );

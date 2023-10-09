@@ -52,7 +52,7 @@ class _DeceasedMainState extends State<DeceasedMain> {
     }
   }
 
-  Future<void> submitFile() async {
+  Future<void> submitFile(String reason) async {
     if (deathCertificatebyte == null || waiverbyte == null) {
       QuickAlert.show(
         context: context,
@@ -71,12 +71,13 @@ class _DeceasedMainState extends State<DeceasedMain> {
 
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost/nwd/transfer/deceased_main.php'),
+      Uri.parse('http://localhost/nwd/transfer/main-applicant/deceased_main.php'),
     );
     request.fields['oldAccountName'] = oldAccountName;
     request.fields['accountNumber'] = accountNumber;
     request.fields['newAccountName'] = newAccountName;
     request.fields['contactNumber'] = contactNumber;
+    request.fields['reason'] = reason;
 
     request.files.add(
       http.MultipartFile.fromBytes(
@@ -181,8 +182,8 @@ class _DeceasedMainState extends State<DeceasedMain> {
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          child: Center(
+        child: Center(
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
@@ -276,7 +277,7 @@ class _DeceasedMainState extends State<DeceasedMain> {
                         ),
                       ),
                       onPressed: () {
-                        submitFile();
+                        submitFile('DECEASED');
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),

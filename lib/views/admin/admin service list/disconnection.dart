@@ -143,7 +143,6 @@ class _DisconnectionListState extends State<DisconnectionList> {
                   final address = service['address'];
                   final contactNumber = service['contact'];
                   final landmark = service['landmark'];
-
                   final status = service['status'];
 
                   return ListTile(

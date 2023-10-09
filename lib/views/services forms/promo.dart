@@ -8,6 +8,7 @@ import 'dart:html' as html;
 
 import 'package:nwd/main_view_widgets/appbar.dart';
 import 'package:nwd/main_view_widgets/dialog.dart';
+import 'package:nwd/main_view_widgets/footer.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 
@@ -29,9 +30,30 @@ class _PromosState extends State<Promos> {
     fetchPromos('promos');
   }
 
+  String getImageUrl(String title, String photoName) {
+    return 'http://localhost/nwd/uploads/promos/$title/$photoName';
+  }
+
+  void showFullScreenImage(String imageUrl) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Center(
+              child: Image.network(imageUrl),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> fetchPromos(String table) async {
-    final response = await http
-        .get(Uri.parse('http://localhost/nwd/user-services/fetch.php?table=$table'));
+    final response = await http.get(Uri.parse(
+        'http://localhost/nwd/admin/get_servicelist.php?table=promos'));
     if (response.statusCode == 200) {
       setState(() {
         promos = List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -73,9 +95,11 @@ class _PromosState extends State<Promos> {
                       return const ConnectionDialog();
                     });
               } else if (value.route == '/transfer-ownership') {
-                showDialog(context: context, builder: (BuildContext context) {
-                  return const TransferDialog();
-                });
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const TransferDialog();
+                    });
               }
             })
           : null,
@@ -126,6 +150,150 @@ class _PromosState extends State<Promos> {
                               promos[index]['content'],
                               style: const TextStyle(fontSize: 20),
                             ),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (promos[index]['photo1'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          showFullScreenImage(getImageUrl(
+                                              promos[index]['title'],
+                                              promos[index]['photo1']));
+                                        },
+                                        child: Container(
+                                          height: 300,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15)),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                getImageUrl(
+                                                  promos[index]['title'],
+                                                  promos[index]['photo1'],
+                                                ),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (promos[index]['photo2'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          showFullScreenImage(getImageUrl(
+                                              promos[index]['title'],
+                                              promos[index]['photo2']));
+                                        },
+                                        child: Container(
+                                          height: 300,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15)),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                getImageUrl(
+                                                  promos[index]['title'],
+                                                  promos[index]['photo2'],
+                                                ),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (promos[index]['photo3'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          showFullScreenImage(getImageUrl(
+                                              promos[index]['title'],
+                                              promos[index]['photo3']));
+                                        },
+                                        child: Container(
+                                          height: 300,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15)),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                getImageUrl(
+                                                  promos[index]['title'],
+                                                  promos[index]['photo3'],
+                                                ),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (promos[index]['photo4'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          showFullScreenImage(getImageUrl(
+                                              promos[index]['title'],
+                                              promos[index]['photo4']));
+                                        },
+                                        child: Container(
+                                          height: 300,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15)),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                getImageUrl(
+                                                  promos[index]['title'],
+                                                  promos[index]['photo4'],
+                                                ),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (promos[index]['photo5'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          showFullScreenImage(getImageUrl(
+                                              promos[index]['title'],
+                                              promos[index]['photo5']));
+                                        },
+                                        child: Container(
+                                          height: 300,
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(15)),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                getImageUrl(
+                                                  promos[index]['title'],
+                                                  promos[index]['photo5'],
+                                                ),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                )
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -133,6 +301,7 @@ class _PromosState extends State<Promos> {
                   );
                 },
               ),
+              const Footer(),
             ],
           ),
         ),

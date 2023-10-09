@@ -4,6 +4,7 @@ import 'dart:html' as html;
 
 import 'package:nwd/main_view_widgets/appbar.dart';
 import 'package:nwd/main_view_widgets/dialog.dart';
+import 'package:nwd/main_view_widgets/footer.dart';
 import 'package:nwd/main_view_widgets/routes.dart';
 import 'package:nwd/main_view_widgets/sidebar.dart';
 
@@ -51,9 +52,11 @@ class _AboutUsState extends State<AboutUs> {
                       return const ConnectionDialog();
                     });
               } else if (value.route == '/transfer-ownership') {
-                showDialog(context: context, builder: (BuildContext context) {
-                  return const TransferDialog();
-                });
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const TransferDialog();
+                    });
               }
             })
           : null,
@@ -61,7 +64,7 @@ class _AboutUsState extends State<AboutUs> {
         child: Column(
           children: [
             Padding(
-              padding:  EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: Text(
                 'ABOUT US',
                 textAlign: TextAlign.center,
@@ -70,7 +73,9 @@ class _AboutUsState extends State<AboutUs> {
                     fontWeight: FontWeight.w900,
                     color: Colors.blue),
               ),
-            )
+            ),
+            Spacer(),
+            Footer(),
           ],
         ),
       ),

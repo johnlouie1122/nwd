@@ -1,44 +1,73 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:nwd/views/services%20forms/main.view.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:http/http.dart' as http;
 import '../../../../main_view_widgets/appbar.dart';
 import '../../../../main_view_widgets/dialog.dart';
 import '../../../../main_view_widgets/routes.dart';
 import '../../../../main_view_widgets/sidebar.dart';
+import '../../main.view.dart';
 import '../transfer_ownership.dart';
-import 'package:http/http.dart' as http;
 
-class NewPropertyMain extends StatefulWidget {
-  const NewPropertyMain({super.key});
+class DeathRepresentative extends StatefulWidget {
+  const DeathRepresentative({super.key});
 
   @override
-  State<NewPropertyMain> createState() => _NewPropertyMainState();
+  State<DeathRepresentative> createState() => _DeathRepresentativeState();
 }
 
-class _NewPropertyMainState extends State<NewPropertyMain> {
+class _DeathRepresentativeState extends State<DeathRepresentative> {
   TextEditingController oldAccountNameController = TextEditingController();
   TextEditingController accountNumberController = TextEditingController();
   TextEditingController newAccountNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
 
-  String? deedOfSale;
+  String? repId;
+  String? waiver;
+  String? death;
 
-  List<int>? deedOfSalebyte;
+  List<int>? repIdbyte;
+  List<int>? waiverbyte;
+  List<int>? deathbyte;
 
-  Future<void> chooseFile2() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+  Future<void> chooseFile1() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.image, /*allowMultiple: true,*/);
+
     if (result != null) {
       setState(() {
-        deedOfSale = result.files.single.name;
-        deedOfSalebyte = result.files.single.bytes;
+        repId = result.files.single.name;
+        repIdbyte = result.files.single.bytes;
       });
     }
   }
 
-  Future<void> submitFile() async {
-    if (deedOfSalebyte == null) {
+  Future<void> chooseFile2() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    
+    if (result != null) {
+      setState(() {
+        waiver = result.files.single.name;
+        waiverbyte = result.files.single.bytes;
+       
+      });
+    }
+  }
+
+  Future<void> chooseFile3() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null) {
+      setState(() {
+        death = result.files.single.name;
+        deathbyte = result.files.single.bytes;
+      });
+    }
+  }
+
+  Future<void> submitFile(String reason) async {
+    if (repIdbyte == null || waiverbyte == null) {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
@@ -51,23 +80,41 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
     final accountNumber = accountNumberController.text;
     final newAccountName = newAccountNameController.text;
     final contactNumber = contactNumberController.text;
-
-    final deedOfSaleName = deedOfSale!;
+    final repIdName = repId!;
+    final waiverName = waiver!;
+    final deathName = death!;
 
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost/nwd/transfer/main-applicant/newLotMain.php'),
+      Uri.parse('http://localhost/nwd/transfer/representative/deadRep.php'),
     );
     request.fields['oldAccountName'] = oldAccountName;
     request.fields['accountNumber'] = accountNumber;
     request.fields['newAccountName'] = newAccountName;
     request.fields['contactNumber'] = contactNumber;
+    request.fields['reason'] = reason;
 
     request.files.add(
       http.MultipartFile.fromBytes(
+        'file1',
+        repIdbyte!,
+        filename: repIdName,
+        contentType: MediaType('application', 'octet-stream'),
+      ),
+    );
+    request.files.add(
+      http.MultipartFile.fromBytes(
         'file2',
-        deedOfSalebyte!,
-        filename: deedOfSaleName,
+        waiverbyte!,
+        filename: waiverName,
+        contentType: MediaType('application', 'octet-stream'),
+      ),
+    );
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file3',
+        deathbyte!,
+        filename: deathName,
         contentType: MediaType('application', 'octet-stream'),
       ),
     );
@@ -171,7 +218,7 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                     width: MediaQuery.of(context).size.width,
                   ),
                   const Text(
-                    'Transfer of Ownership\n(New Property Owner)',
+                    'Transfer of Ownership\n(Representative)',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 30,
@@ -237,7 +284,11 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  fileButton(deedOfSale, 'Supporting Document', chooseFile2),
+                  fileButton(repId, 'Representative valid ID', chooseFile1),
+                  const SizedBox(height: 10),
+                  fileButton(waiver, 'Waiver', chooseFile2),
+                  const SizedBox(height: 10),
+                  fileButton(death, 'Death Certificate', chooseFile3),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -250,7 +301,7 @@ class _NewPropertyMainState extends State<NewPropertyMain> {
                         ),
                       ),
                       onPressed: () {
-                        submitFile();
+                        submitFile('DECEASED');
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),

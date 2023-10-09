@@ -58,7 +58,7 @@ class _NormalTransferMainState extends State<NormalTransferMain> {
 
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://localhost/nwd/transfer/deceased_main.php'),
+      Uri.parse('http://localhost/nwd/transfer/main-applicant/normalmain.php'),
     );
     request.fields['oldAccountName'] = oldAccountName;
     request.fields['accountNumber'] = accountNumber;
@@ -160,8 +160,8 @@ class _NormalTransferMainState extends State<NormalTransferMain> {
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          child: Center(
+        child: Center(
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(

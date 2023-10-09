@@ -52,7 +52,6 @@ dependencies:
   twilio_flutter: ^0.0.9
   intl: ^0.17.0
   provider: ^6.0.5
-  foundation: ^0.0.5
  
   
 

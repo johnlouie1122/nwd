@@ -27,7 +27,6 @@ class CustomCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        elevation: 10,
         child: Column(
           children: [
             Padding(

@@ -15,22 +15,32 @@ class CustomerFeedbackList extends StatefulWidget {
 
 class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
   List<dynamic> feedbackList = [];
+  List<dynamic> serviceData = [];
 
   @override
   void initState() {
     super.initState();
-    fetchFeedbackList();
+    fetchServiceData();
   }
 
-  Future<void> fetchFeedbackList() async {
-    final response = await http
-        .get(Uri.parse('http://localhost/nwd/admin/feedback_list.php'));
-
+  Future<void> fetchServiceData() async {
+    final response = await http.get(Uri.parse(
+        'http://localhost/nwd/admin/get_servicelist.php?table=customer_feedback'));
     if (response.statusCode == 200) {
       setState(() {
-        feedbackList = json.decode(response.body);
+        serviceData = json.decode(response.body);
       });
-    } else {}
+    }
+  }
+
+  Color _getStatusColor(String status) {
+    if (status == 'CHECKED') {
+      return Colors.green;
+    } else if (status == 'NEW') {
+      return Colors.blue;
+    } else {
+      return Colors.black;
+    }
   }
 
   Future<void> deleteFeedback(String? id) async {
@@ -40,39 +50,29 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
         body: {'id': id},
       );
       if (response.statusCode == 200) {
-        fetchFeedbackList();
+        fetchServiceData();
       } else {
         print('Error deleting announcement');
       }
     }
   }
 
-  Future<void> markFeedbackAsChecked(String? id) async {
-    if (id != null) {
-      final response = await http.post(
-        Uri.parse('http://localhost/nwd/admin/update_feedback.php'),
-        body: {'id': id},
-      );
-      if (response.statusCode == 200) {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'Feedback marked as checked!',
-          onConfirmBtnTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (BuildContext context) {
-              return const CustomerFeedbackList();
-            }));
-          },
-        );
-        fetchFeedbackList();
-      } else {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: 'Failed to mark as checked!',
-        );
-      }
+  Future<void> updateStatus(String id, String status, String table) async {
+    final url =
+        Uri.parse('http://localhost/nwd/admin/update_status.php');
+    final response = await http.post(
+      url,
+      body: {
+        'id': id,
+        'status': status,
+        'table': table,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Status updated successfully');
+    } else {
+      print('Error updating status: ${response.body}');
     }
   }
 
@@ -92,11 +92,11 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: feedbackList.length,
+                itemCount: serviceData.length,
                 itemBuilder: (BuildContext context, int index) {
                   var tileColor =
                       index % 2 == 0 ? Colors.white : Colors.grey.shade100;
-                  final feedback = feedbackList[index];
+                  final feedback = serviceData[index];
                   return ListTile(
                     hoverColor: Colors.blue.shade100,
                     tileColor: tileColor,
@@ -105,8 +105,8 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
                       style: const TextStyle(fontSize: 15),
                     ),
                     trailing: Text(
-                      feedback['type'],
-                      style: const TextStyle(fontSize: 15),
+                      feedback['status'],
+                      style:  TextStyle(fontSize: 15, color: _getStatusColor(feedback['status'])),
                     ),
                     onTap: () {
                       showDialog(
@@ -208,7 +208,21 @@ class _CustomerFeedbackListState extends State<CustomerFeedbackList> {
                                     type: QuickAlertType.warning,
                                     text: 'Are you sure',
                                     onConfirmBtnTap: () async {
-                                      markFeedbackAsChecked(feedback['id']);
+                                      QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.success,
+                                        text: 'Service Successfully Approved',
+                                        onConfirmBtnTap: () {
+                                          updateStatus(feedback['id'].toString(), 'CHECKED', 'customer_feedback');
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return const CustomerFeedbackList();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
                                     },
                                   );
                                 },
