@@ -8,9 +8,9 @@ $landmark = $_POST['landmark'];
 $nearestCustomer = $_POST['nearest_existing_customer'];
 
 $servername = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$dbname = "ocsms-nwd";
+$username = "root";
+$password = "";
+$dbname = "nwd";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

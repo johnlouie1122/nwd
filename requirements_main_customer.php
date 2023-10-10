@@ -11,15 +11,14 @@ if (
     isset($_POST['name'])
 ) {
     $servername = "localhost";
-    $username = "smcc";
-    $password = "smcc@202";
-    $dbname = "ocsms-nwd";
+    $username = "root";
+    $password = "";
+    $dbname = "nwd";
 
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $name = $_POST['name'];
-    $randomNumber = $_POST['randomNumber'];
 
     $stmt = $conn->prepare("SELECT COUNT(*) FROM registration WHERE name = ?");
     $stmt->execute([$name]);
@@ -31,14 +30,13 @@ if (
         $stmt->execute([$name]);
     }
 
-    $stmt = $conn->prepare("UPDATE registration SET water_permit = ?, waiver = ?, lot_title = ?, valid_id = ?, brgy_certificate = ?, status = 'PENDING (REQUIREMENTS)', type = 'MAIN APPLICANT', orientation_code = ?, orientation_status = 'PENDING' WHERE name = ?");
+    $stmt = $conn->prepare("UPDATE registration SET water_permit = ?, waiver = ?, lot_title = ?, valid_id = ?, brgy_certificate = ?, status = 'PENDING (REQUIREMENTS)', type = 'MAIN APPLICANT', orientation_status = 'PENDING' WHERE name = ?");
     $stmt->execute([
         $_FILES["file1"]["name"],
         $_FILES["file2"]["name"],
         $_FILES["file3"]["name"],
         $_FILES["file4"]["name"],
         $_FILES["file5"]["name"],
-        $randomNumber,
         $name,
     ]);
 

@@ -2,9 +2,9 @@
 header('Access-Control-Allow-Origin: *');
 
 $servername = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$dbname = "ocsms-nwd";
+$username = "root";
+$password = "";
+$dbname = "nwd";
 
 $certificateCode = $_POST['certificate_code']; 
 $registrationCode = $_POST['code']; 

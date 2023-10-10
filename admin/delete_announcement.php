@@ -1,26 +1,42 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$host = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$database = "ocsms-nwd";
+require_once 'db_connection.php'; 
 
-$conn = new mysqli($host, $username, $password, $database);
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    $title = $_POST['title']; 
+
+    $stmt = $conn->prepare("DELETE FROM announcements WHERE title = :title");
+    $stmt->bindParam(':title', $title); 
+    $stmt->execute();
+
+    $folderPath = '../uploads/announcements/' . $title; 
+    if (is_dir($folderPath)) {
+        $success = deleteFolder($folderPath);
+        if ($success) {
+            echo "Row and folder deleted successfully";
+        } else {
+            echo "Failed to delete folder";
+        }
+    } else {
+        echo "Folder does not exist";
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 
-$title = $_POST['title'];
-
-$query = "DELETE FROM announcements WHERE title = '$title'";
-
-if ($conn->query($query) === TRUE) {
-    echo "Announcement deleted successfully";
-} else {
-    echo "Error deleting announcement: " . $conn->error;
+function deleteFolder($folderPath) {
+    $files = glob($folderPath . '/*');
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        } elseif (is_dir($file)) {
+            deleteFolder($file);
+        }
+    }
+    return rmdir($folderPath);
 }
-
-$conn->close();
 ?>

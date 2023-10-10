@@ -1,20 +1,16 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$host = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$database = "ocsms-nwd";
+require_once 'db_connection.php'; 
 
-$conn = new mysqli($host, $username, $password, $database);
-
+$conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$name = $_POST['name']; 
+$id = $_POST['id']; 
 
-$query = "DELETE FROM customer_feedback WHERE name = '$name'";
+$query = "DELETE FROM customer_feedback WHERE id = '$id'";
 
 if ($conn->query($query) === TRUE) {
     echo "feedback deleted successfully";

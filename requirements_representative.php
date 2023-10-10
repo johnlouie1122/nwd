@@ -12,15 +12,14 @@ if (
     isset($_FILES["file7"]) && $_FILES["file7"]["error"] === UPLOAD_ERR_OK
 ) {
     $servername = "localhost";
-    $username = "smcc";
-    $password = "smcc@2020";
-    $dbname = "ocsms-nwd";
+    $username = "root";
+    $password = "";
+    $dbname = "nwd";
 
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $name = $_POST['name'];
-    $randomNumber = $_POST['randomNumber'];
 
     $stmt = $conn->prepare("SELECT COUNT(*) FROM registration WHERE name = ?");
     $stmt->execute([$name]);
@@ -31,7 +30,7 @@ if (
         $stmt->execute([$name]);
     }
 
-    $stmt = $conn->prepare("UPDATE registration SET water_permit = ?, waiver = ?, lot_title = ?, valid_id = ?, brgy_certificate = ?, authorization = ?, valid_id_representative = ?, status = 'PENDING (REQUIREMENTS)', type = 'REPRESENTATIVE', orientation_code = ?, orientation_status = 'PENDING' WHERE name = ?");
+    $stmt = $conn->prepare("UPDATE registration SET water_permit = ?, waiver = ?, lot_title = ?, valid_id = ?, brgy_certificate = ?, authorization = ?, valid_id_representative = ?, status = 'PENDING (REQUIREMENTS)', type = 'REPRESENTATIVE', orientation_status = 'PENDING' WHERE name = ?");
     $stmt->execute([
         $_FILES["file1"]["name"],
         $_FILES["file2"]["name"],
@@ -40,7 +39,6 @@ if (
         $_FILES["file5"]["name"],
         $_FILES["file6"]["name"],
         $_FILES["file7"]["name"],
-        $randomNumber,
         $name,
     ]);
 

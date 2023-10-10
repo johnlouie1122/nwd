@@ -1,14 +1,12 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$applicantName = $_POST['applicantName'];
+$name = $_POST['name'];
 $status = $_POST['status'];
 $randomNumber = $_POST['randomNumber'];
 
-$servername = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$dbname = "ocsms-nwd";
+
+require_once 'db_connection.php'; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -19,11 +17,15 @@ $sql = "UPDATE registration SET status = '$status'";
 
 if ($_POST['type'] === 'MAIN APPLICANT') {
     $sql .= ", main_applicant_code = '$randomNumber'";
-} elseif ($_POST['type'] === 'REPRESENTATIVE') {
+} else if ($_POST['type'] === 'REPRESENTATIVE') {
     $sql .= ", representative_code = '$randomNumber'";
+} 
+
+if ($_POST['status'] === 'ORIENTATION') {
+    $sql .= ", orientation_code = '$randomNumber'";
 }
 
-$sql .= " WHERE name = '$applicantName'";
+$sql .= " WHERE name = '$name'";
 
 if ($conn->query($sql) === TRUE) {
     echo "Status updated successfully";

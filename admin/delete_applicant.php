@@ -1,14 +1,10 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$host = 'localhost';
-$dbName = 'ocsms-nwd';
-$username = 'smcc';
-$password = 'smcc@2020';
+require_once 'db_connection.php'; 
 
 try {
-
-    $conn = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $applicantName = $_POST['applicantName'];
@@ -19,30 +15,28 @@ try {
 
     $folderPath = '../uploads/' . $applicantName;
     if (is_dir($folderPath)) {
-      $success = deleteFolder($folderPath);
-      if ($success) {
-        echo "Row and folder deleted successfully";
-      } else {
-        echo "Failed to delete folder";
-      }
+        $success = deleteFolder($folderPath);
+        if ($success) {
+            echo "Row and folder deleted successfully";
+        } else {
+            echo "Failed to delete folder";
+        }
     } else {
-      echo "Folder does not exist";
+        echo "Folder does not exist";
     }
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
 
-$conn = null;
-
 function deleteFolder($folderPath) {
-  $files = glob($folderPath . '/*');
-  foreach ($files as $file) {
-    if (is_file($file)) {
-      unlink($file);
-    } elseif (is_dir($file)) {
-      deleteFolder($file);
+    $files = glob($folderPath . '/*');
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        } elseif (is_dir($file)) {
+            deleteFolder($file);
+        }
     }
-  }
-  return rmdir($folderPath);
+    return rmdir($folderPath);
 }
 ?>

@@ -1,13 +1,9 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$host = "localhost";
-$username = "smcc";
-$password = "smcc@2020";
-$database = "ocsms-nwd";
+require_once 'db_connection.php'; 
 
-$conn = new mysqli($host, $username, $password, $database);
-
+$conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
