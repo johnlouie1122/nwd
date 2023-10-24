@@ -11,7 +11,9 @@ if ($conn->connect_error) {
 $id = $_POST['id'];
 $status = $_POST['status'];
 $table = $_POST['table'];
+
 // $contact = $_POST['contact'];
+
 
 $sql = "UPDATE $table SET status = '$status' WHERE id = '$id'";
 

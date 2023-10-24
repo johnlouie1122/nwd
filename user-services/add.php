@@ -21,6 +21,8 @@ $table = $_POST['table'];
 
 $date = date('Y-m-d');
 
+$contact = '+63' . substr($contact, 1);
+
 $stmt = $conn->prepare("INSERT INTO $table (account_name, account_number, landmark, address, contact, date, status) VALUES (?, ?, ?, ?, ?, ?, 'PENDING')");
 $stmt->bind_param("ssssss", $accountName, $accountNumber, $address, $landmark, $contact, $date);
 

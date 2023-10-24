@@ -7,13 +7,15 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $title = $_POST['title']; 
+    $title = $_POST['title'];
+    $table = $_POST['table'];
+    $id = $_POST['id'];
 
-    $stmt = $conn->prepare("DELETE FROM announcements WHERE title = :title");
+    $stmt = $conn->prepare("DELETE FROM $table WHERE title = :title");
     $stmt->bindParam(':title', $title); 
     $stmt->execute();
 
-    $folderPath = '../uploads/announcements/' . $title; 
+    $folderPath = '../uploads/' . $table . '/' . $title;
     if (is_dir($folderPath)) {
         $success = deleteFolder($folderPath);
         if ($success) {
